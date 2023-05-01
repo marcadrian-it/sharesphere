@@ -1,10 +1,8 @@
-import React, { useState } from "react";
-
-import { withUrqlClient } from "next-urql";
-import { createUrqlClient } from "../utils/createUrqlClient";
+import React from "react";
 import { usePostsQuery } from "../generated/graphql";
 import { EditDeletePostButtons } from "../components/EditDeletePostButtons";
 import { Layout } from "../components/Layout";
+import { withApollo2 } from "../utils/withApollo";
 
 import {
   Box,
@@ -20,16 +18,15 @@ import { UpvoteSection } from "../components/UpvoteSection";
 import NextLink from "next/link";
 
 const Index = () => {
-  const [variables, setVariables] = useState({
-    limit: 15,
-    cursor: null as null | string,
+  const { data, error, loading, fetchMore, variables } = usePostsQuery({
+    variables: {
+      limit: 15,
+      cursor: null,
+    },
+    notifyOnNetworkStatusChange: true,
   });
 
-  const [{ data, error, fetching }] = usePostsQuery({
-    variables,
-  });
-
-  if (!fetching && !data) {
+  if (!loading && !data) {
     return (
       <Box>
         query failed for some reason
@@ -40,7 +37,7 @@ const Index = () => {
 
   return (
     <Layout>
-      {!data && fetching ? (
+      {!data && loading ? (
         <Box>loading...</Box>
       ) : (
         <Stack spacing={8}>
@@ -72,12 +69,15 @@ const Index = () => {
         <Flex align="center">
           <Button
             onClick={() => {
-              setVariables({
-                limit: variables.limit,
-                cursor: data.posts.posts[data.posts.posts.length - 1].createdAt,
+              fetchMore({
+                variables: {
+                  limit: variables?.limit,
+                  cursor:
+                    data.posts.posts[data.posts.posts.length - 1].createdAt,
+                },
               });
             }}
-            isLoading={fetching}
+            isLoading={loading}
             m="auto"
           >
             load more
@@ -88,4 +88,4 @@ const Index = () => {
   );
 };
 
-export default withUrqlClient(createUrqlClient, { ssr: true })(Index);
+export default withApollo2({ ssr: true })(Index);
