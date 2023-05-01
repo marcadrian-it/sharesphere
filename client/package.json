@@ -23,7 +23,6 @@
     "graphql-tag": "2.12.6",
     "next": "latest",
     "next-apollo": "^5.0.8",
-    "next-graphql-react": "^15.0.2",
     "next-urql": "5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
