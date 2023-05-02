@@ -3,6 +3,7 @@ mutation CreatePost($input: PostInput!) {
     id
     title
     text
+    imageUrl
     points
     authorId
     createdAt

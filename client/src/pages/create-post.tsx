@@ -1,64 +1,113 @@
-import { Box, Button } from '@chakra-ui/react';
-import { Form, Formik } from 'formik';
-import { withUrqlClient } from 'next-urql';
-import { useRouter } from 'next/router';
-import React from 'react';
-import { InputField } from '../components/InputField';
-import { Layout } from '../components/Layout';
-import { useCreatePostMutation } from '../generated/graphql';
-import { createUrqlClient } from '../utils/createUrqlClient';
-import { useIsAuth } from '../utils/useIsAuth';
+import { Box, Button } from "@chakra-ui/react";
+import { Form, Formik } from "formik";
+
+import { useRouter } from "next/router";
+import React, { useState } from "react";
+import { InputField } from "../components/InputField";
+import { InputFile } from "../components/InputFile";
+import { Layout } from "../components/Layout";
+import { useCreatePostMutation } from "../generated/graphql";
+
+import { withApollo2 } from "../utils/withApollo";
 
 const CreatePost: React.FC<{}> = ({}) => {
-    const router = useRouter();
-    useIsAuth();
-    const [,createPost] = useCreatePostMutation();
-        return (
-            <Layout variant='small'>
-                <Formik 
-                    initialValues={{title: '', text: ''}}
-                    onSubmit={async (values) => {
-                        const {error} = 
-                        await createPost({input: values});
-                        if (!error) {
-                            router.push('/');
-                        }
+  const router = useRouter();
+  const [createPost] = useCreatePostMutation();
+  const [file, setFile] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState<string>("");
 
-                    }}
+  return (
+    <Layout variant="small">
+      <Formik
+        initialValues={{ title: "", text: "" }}
+        onSubmit={async (values) => {
+          let finalImageUrl = imageUrl;
 
-                >
-                    {({isSubmitting}) => (
-                        <Form>
-                            <InputField
-                                name='title'
-                                placeholder='title'
-                                label='Title'
-                            />
-                            <Box mt={4}>
-                                <InputField
-                                    height={300}
-                                    width={500}
-                                    textarea
-                                    name='text'
-                                    placeholder='text...'
-                                    label='Body'
-                                />
-                            </Box>
-                            <Button
-                                mt={4}
-                                type='submit'
-                                isLoading={isSubmitting}
-                                colorScheme='teal'
-                            >
-                                Create Post
-                            </Button>
-                        </Form>
-                    )}
-                </Formik>
-                
+          // If the user has selected a file, upload it to Cloudinary
+          if (file) {
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("upload_preset", "cjbazo7v");
+            const response = await fetch(
+              `https://api.cloudinary.com/v1_1/dmzmqvehw/image/upload`,
+              {
+                method: "POST",
+                body: formData,
+              }
+            );
+            const data = await response.json();
+            finalImageUrl = data.secure_url;
+          } else if (imageUrl) {
+            // Check if imageUrl is a valid URL
+            try {
+              new URL(imageUrl);
+              // If the user has provided a valid imageUrl, upload it to Cloudinary
+              const formData = new FormData();
+              formData.append("file", imageUrl);
+              formData.append("upload_preset", "cjbazo7v");
+              const response = await fetch(
+                `https://api.cloudinary.com/v1_1/dmzmqvehw/image/upload`,
+                {
+                  method: "POST",
+                  body: formData,
+                }
+              );
+              const data = await response.json();
+              finalImageUrl = data.secure_url;
+            } catch (error) {
+              // If imageUrl is not a valid URL, call createPost with an empty imageUrl
+              finalImageUrl = "";
+            }
+          }
 
-            </Layout>
-        );
-}
+          // Create a new post with the final image URL
+          const { errors } = await createPost({
+            variables: { input: { ...values, imageUrl: finalImageUrl } },
+            update: (cache) => {
+              cache.evict({ fieldName: "posts:{}" });
+            },
+          });
+          if (!errors) {
+            router.push("/");
+          }
+        }}
+      >
+        {({ isSubmitting }) => (
+          <Form>
+            <InputField name="title" placeholder="title" label="Title" />
+            <Box mt={4}>
+              <InputFile
+                onFileChange={(file) => {
+                  setFile(file);
+                }}
+                onImageUrlChange={(imageUrl) => {
+                  setImageUrl(imageUrl);
+                }}
+              />
+            </Box>
+            <Box mt={4}>
+              <InputField
+                height={300}
+                width={500}
+                textarea
+                name="text"
+                placeholder="text..."
+                label="Body"
+              />
+            </Box>
+            <Button
+              mt={4}
+              type="submit"
+              isLoading={isSubmitting}
+              colorScheme="teal"
+            >
+              Create Post
+            </Button>
+          </Form>
+        )}
+      </Formik>
+    </Layout>
+  );
+};
 
-export default withUrqlClient(createUrqlClient)(CreatePost);
+export default withApollo2({ ssr: false })(CreatePost);

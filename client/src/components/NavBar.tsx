@@ -2,17 +2,18 @@ import React from "react";
 import { Box, Button, Flex, Heading, Link } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useLogoutMutation, useMeQuery } from "../generated/graphql";
-import { useRouter } from "next/router";
 import { isServer } from "../utils/isServer";
 import { useEffect, useState } from "react";
+import { useApolloClient } from "@apollo/client";
+import { Img } from "@chakra-ui/react";
 
 interface NavBarProps {}
 
 export const NavBar: React.FC<NavBarProps> = ({}) => {
-  const router = useRouter();
-  const [{ fetching: logoutFetching }, logout] = useLogoutMutation();
-  const [{ data }] = useMeQuery({
-    pause: isServer(),
+  const [logout, { loading: logoutFetching }] = useLogoutMutation();
+  const apolloClient = useApolloClient();
+  const { data } = useMeQuery({
+    skip: isServer(),
   });
   const [showContent, setShowContent] = useState(false);
 
@@ -43,13 +44,11 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
           create post
         </Button>
 
-        <Box mr={2} color="white">
-          {data.me.username}
-        </Box>
+        <Box mr={2}>{data.me.username}</Box>
         <Button
           onClick={async () => {
             await logout({});
-            router.reload();
+            await apolloClient.resetStore();
           }}
           isLoading={logoutFetching}
           variant="link"
@@ -63,7 +62,15 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
     <Flex zIndex={1} position="sticky" top={0} bg="tan" p={4}>
       <Flex flex={1} m="auto" maxW={800} align="center">
         <Link as={NextLink} href="/">
-          <Heading>Sharesphere</Heading>
+          <Flex flexDirection="row" align="center">
+            <Box boxSize="24">
+              <Img
+                src="https://res.cloudinary.com/dmzmqvehw/image/upload/v1682981008/cover1_p49abt.png"
+                alt="logo"
+              />
+            </Box>
+            <Heading>Sharesphere</Heading>
+          </Flex>
         </Link>
 
         <Box ml={"auto"}>{body}</Box>
