@@ -18,6 +18,13 @@ import { MyPostgresDataSource } from "../data-source";
 import { Int } from "type-graphql";
 import { Upvote } from "../entities/Upvote";
 import { User } from "../entities/User";
+import cloudinary from "cloudinary";
+
+cloudinary.v2.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 @InputType()
 class PostInput {
@@ -25,6 +32,8 @@ class PostInput {
   title: string;
   @Field()
   text: string;
+  @Field()
+  imageUrl: string;
 }
 
 @ObjectType()
@@ -178,10 +187,15 @@ export class PostResolver {
     @Arg("input") input: PostInput,
     @Ctx() { req }: MyContext
   ): Promise<Post> {
-    return Post.create({
+    if (!input.imageUrl) {
+      input.imageUrl = " https://via.placeholder.com/600";
+    }
+    const post = Post.create({
       ...input,
       authorId: req.session.userId,
     }).save();
+
+    return post;
   }
 
   @Mutation(() => Post, { nullable: true })
@@ -208,18 +222,20 @@ export class PostResolver {
   @UseMiddleware(isAuth)
   async deletePost(
     @Arg("id", () => Int) id: number,
+    @Arg("imageId", () => String) imageId: string,
     @Ctx() { req }: MyContext
   ): Promise<boolean> {
-    // not cascade way
-    // const post = await Post.findOne({ where: { id } });
-    // if (!post) {
-    //   return false;
-    // }
-    // if (post.authorId !== req.session.userId) {
-    //   throw new Error("not authorized");
-    // }
-    // await Upvote.delete({ postId: id });
-    // await Post.delete({ id });
+    // Delete the image using the provided image ID
+    if (imageId) {
+      try {
+        const result = await cloudinary.v2.uploader.destroy(imageId);
+        console.log(result);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    // Delete the post from the database
     await Post.delete({ id, authorId: req.session.userId });
     return true;
   }

@@ -48,6 +48,7 @@ export type MutationCreatePostArgs = {
 
 export type MutationDeletePostArgs = {
   id: Scalars['Int'];
+  imageId: Scalars['String'];
 };
 
 
@@ -91,6 +92,7 @@ export type Post = {
   authorId: Scalars['Float'];
   createdAt: Scalars['String'];
   id: Scalars['Float'];
+  imageUrl: Scalars['String'];
   points: Scalars['Float'];
   text: Scalars['String'];
   textSnippet: Scalars['String'];
@@ -100,6 +102,7 @@ export type Post = {
 };
 
 export type PostInput = {
+  imageUrl: Scalars['String'];
   text: Scalars['String'];
   title: Scalars['String'];
 };
@@ -144,7 +147,7 @@ export type UsernamePasswordInput = {
   username: Scalars['String'];
 };
 
-export type PostSnippetFragment = { __typename?: 'Post', id: number, title: string, textSnippet: string, voteStatus?: number | null, points: number, createdAt: string, updatedAt: string, author: { __typename?: 'User', id: number, username: string } };
+export type PostSnippetFragment = { __typename?: 'Post', id: number, title: string, textSnippet: string, imageUrl: string, voteStatus?: number | null, points: number, createdAt: string, updatedAt: string, author: { __typename?: 'User', id: number, username: string } };
 
 export type RegularErrorFragment = { __typename?: 'FieldError', field: string, message: string };
 
@@ -165,10 +168,11 @@ export type CreatePostMutationVariables = Exact<{
 }>;
 
 
-export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: number, title: string, text: string, points: number, authorId: number, createdAt: string, updatedAt: string } };
+export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: number, title: string, text: string, imageUrl: string, points: number, authorId: number, createdAt: string, updatedAt: string } };
 
 export type DeletePostMutationVariables = Exact<{
   id: Scalars['Int'];
+  imageId: Scalars['String'];
 }>;
 
 
@@ -208,7 +212,7 @@ export type UpdatePostMutationVariables = Exact<{
 }>;
 
 
-export type UpdatePostMutation = { __typename?: 'Mutation', updatePost?: { __typename?: 'Post', id: number, title: string, text: string, textSnippet: string } | null };
+export type UpdatePostMutation = { __typename?: 'Mutation', updatePost?: { __typename?: 'Post', id: number, title: string, imageUrl: string, text: string, textSnippet: string } | null };
 
 export type VoteMutationVariables = Exact<{
   value: Scalars['Int'];
@@ -228,7 +232,7 @@ export type PostQueryVariables = Exact<{
 }>;
 
 
-export type PostQuery = { __typename?: 'Query', post?: { __typename?: 'Post', id: number, title: string, createdAt: string, updatedAt: string, points: number, text: string, voteStatus?: number | null, author: { __typename?: 'User', id: number, username: string } } | null };
+export type PostQuery = { __typename?: 'Query', post?: { __typename?: 'Post', id: number, title: string, createdAt: string, updatedAt: string, points: number, text: string, imageUrl: string, voteStatus?: number | null, author: { __typename?: 'User', id: number, username: string } } | null };
 
 export type PostsQueryVariables = Exact<{
   limit: Scalars['Int'];
@@ -236,13 +240,14 @@ export type PostsQueryVariables = Exact<{
 }>;
 
 
-export type PostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPosts', hasMore: boolean, posts: Array<{ __typename?: 'Post', id: number, title: string, textSnippet: string, voteStatus?: number | null, points: number, createdAt: string, updatedAt: string, author: { __typename?: 'User', id: number, username: string } }> } };
+export type PostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPosts', hasMore: boolean, posts: Array<{ __typename?: 'Post', id: number, title: string, textSnippet: string, imageUrl: string, voteStatus?: number | null, points: number, createdAt: string, updatedAt: string, author: { __typename?: 'User', id: number, username: string } }> } };
 
 export const PostSnippetFragmentDoc = gql`
     fragment PostSnippet on Post {
   id
   title
   textSnippet
+  imageUrl
   voteStatus
   points
   createdAt
@@ -316,6 +321,7 @@ export const CreatePostDocument = gql`
     id
     title
     text
+    imageUrl
     points
     authorId
     createdAt
@@ -350,8 +356,8 @@ export type CreatePostMutationHookResult = ReturnType<typeof useCreatePostMutati
 export type CreatePostMutationResult = Apollo.MutationResult<CreatePostMutation>;
 export type CreatePostMutationOptions = Apollo.BaseMutationOptions<CreatePostMutation, CreatePostMutationVariables>;
 export const DeletePostDocument = gql`
-    mutation DeletePost($id: Int!) {
-  deletePost(id: $id)
+    mutation DeletePost($id: Int!, $imageId: String!) {
+  deletePost(id: $id, imageId: $imageId)
 }
     `;
 export type DeletePostMutationFn = Apollo.MutationFunction<DeletePostMutation, DeletePostMutationVariables>;
@@ -370,6 +376,7 @@ export type DeletePostMutationFn = Apollo.MutationFunction<DeletePostMutation, D
  * const [deletePostMutation, { data, loading, error }] = useDeletePostMutation({
  *   variables: {
  *      id: // value for 'id'
+ *      imageId: // value for 'imageId'
  *   },
  * });
  */
@@ -513,6 +520,7 @@ export const UpdatePostDocument = gql`
   updatePost(id: $id, title: $title, text: $text) {
     id
     title
+    imageUrl
     text
     textSnippet
   }
@@ -621,6 +629,7 @@ export const PostDocument = gql`
     updatedAt
     points
     text
+    imageUrl
     voteStatus
     author {
       id

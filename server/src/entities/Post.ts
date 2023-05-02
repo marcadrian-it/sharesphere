@@ -28,6 +28,10 @@ export class Post extends BaseEntity {
   text!: string;
 
   @Field()
+  @Column({ default: " https://via.placeholder.com/600" })
+  imageUrl!: string;
+
+  @Field()
   @Column({ type: "int", default: 0 })
   points!: number;
 

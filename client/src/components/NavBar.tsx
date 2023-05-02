@@ -5,6 +5,7 @@ import { useLogoutMutation, useMeQuery } from "../generated/graphql";
 import { isServer } from "../utils/isServer";
 import { useEffect, useState } from "react";
 import { useApolloClient } from "@apollo/client";
+import { Img } from "@chakra-ui/react";
 
 interface NavBarProps {}
 
@@ -43,9 +44,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
           create post
         </Button>
 
-        <Box mr={2} color="white">
-          {data.me.username}
-        </Box>
+        <Box mr={2}>{data.me.username}</Box>
         <Button
           onClick={async () => {
             await logout({});
@@ -63,7 +62,15 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
     <Flex zIndex={1} position="sticky" top={0} bg="tan" p={4}>
       <Flex flex={1} m="auto" maxW={800} align="center">
         <Link as={NextLink} href="/">
-          <Heading>Sharesphere</Heading>
+          <Flex flexDirection="row" align="center">
+            <Box boxSize="24">
+              <Img
+                src="https://res.cloudinary.com/dmzmqvehw/image/upload/v1682981008/cover1_p49abt.png"
+                alt="logo"
+              />
+            </Box>
+            <Heading>Sharesphere</Heading>
+          </Flex>
         </Link>
 
         <Box ml={"auto"}>{body}</Box>

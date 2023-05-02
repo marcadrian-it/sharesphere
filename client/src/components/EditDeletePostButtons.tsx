@@ -7,11 +7,13 @@ import { useDeletePostMutation, useMeQuery } from "../generated/graphql";
 interface EditDeletePostButtonsProps {
   id: number;
   authorId: number;
+  imageUrl: string;
 }
 
 export const EditDeletePostButtons: React.FC<EditDeletePostButtonsProps> = ({
   id,
   authorId,
+  imageUrl,
 }) => {
   const { data: meData } = useMeQuery();
   const [deletePost] = useDeletePostMutation();
@@ -33,13 +35,27 @@ export const EditDeletePostButtons: React.FC<EditDeletePostButtonsProps> = ({
           ml={4}
           aria-label="delete post"
           variant="solid"
-          onClick={() => {
-            deletePost({
-              variables: { id },
-              update: (cache) => {
-                cache.evict({ id: "Post:" + id });
-              },
-            });
+          onClick={async () => {
+            if (imageUrl.includes("placeholder.com")) {
+              // imageUrl is a placeholder image, so there is no image to delete on Cloudinary
+              await deletePost({
+                variables: { id, imageId: "" },
+                update: (cache) => {
+                  cache.evict({ id: "Post:" + id });
+                },
+              });
+            } else {
+              const match = imageUrl.match(/\/([^/]+)\.[^/.]+$/);
+              if (match) {
+                const imageId = match[1];
+                await deletePost({
+                  variables: { id, imageId },
+                  update: (cache) => {
+                    cache.evict({ id: "Post:" + id });
+                  },
+                });
+              }
+            }
           }}
           icon={<DeleteIcon />}
         />

@@ -7,8 +7,10 @@ import { withApollo2 } from "../utils/withApollo";
 import {
   Box,
   Button,
+  Center,
   Flex,
   Heading,
+  Img,
   Link,
   Stack,
   Text,
@@ -49,14 +51,26 @@ const Index = () => {
                   <Link as={NextLink} href={`/post/${p.id}`}>
                     <Heading fontSize="xl">{p.title}</Heading>
                   </Link>
-                  <Text>posted by: {p.author.username}</Text>
+                  <Center>
+                    <Img
+                      src={p.imageUrl}
+                      maxH="600"
+                      objectFit="cover"
+                      mt={4}
+                    ></Img>
+                  </Center>
 
+                  <Text>posted by: {p.author.username}</Text>
                   <Flex align="center">
                     <Text flex={1} mt={4}>
                       {p.textSnippet}
                     </Text>
                     <Box ml="auto">
-                      <EditDeletePostButtons id={p.id} authorId={p.author.id} />
+                      <EditDeletePostButtons
+                        id={p.id}
+                        authorId={p.author.id}
+                        imageUrl={p.imageUrl}
+                      />
                     </Box>
                   </Flex>
                 </Box>
