@@ -55,7 +55,7 @@ const CreatePost: React.FC<{}> = ({}) => {
               const data = await response.json();
               finalImageUrl = data.secure_url;
             } catch (error) {
-              // If imageUrl is not a valid URL, call createPost with an empty imageUrl
+              // If imageUrl is not a valid URL, call createPost with an empty imageUrl this will cause resolver to create a placeholder image
               finalImageUrl = "";
             }
           }

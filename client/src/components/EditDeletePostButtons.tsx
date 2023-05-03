@@ -36,8 +36,7 @@ export const EditDeletePostButtons: React.FC<EditDeletePostButtonsProps> = ({
           aria-label="delete post"
           variant="solid"
           onClick={async () => {
-            if (imageUrl.includes("placeholder.com")) {
-              // imageUrl is a placeholder image, so there is no image to delete on Cloudinary
+            if (!imageUrl || imageUrl.includes("placeholder.com")) {
               await deletePost({
                 variables: { id, imageId: "" },
                 update: (cache) => {

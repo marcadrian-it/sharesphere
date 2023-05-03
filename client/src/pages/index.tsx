@@ -80,7 +80,7 @@ const Index = () => {
         </Stack>
       )}
       {data && data.posts.hasMore ? (
-        <Flex align="center">
+        <Flex align="center" mt={4} mb={4}>
           <Button
             onClick={() => {
               fetchMore({
