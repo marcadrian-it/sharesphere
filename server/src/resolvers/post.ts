@@ -80,8 +80,7 @@ export class PostResolver {
     @Arg("value", () => Int) value: number,
     @Ctx() { req }: MyContext
   ) {
-    const isUpvote = value !== -1;
-    const realValue = isUpvote ? 1 : -1;
+    const realValue = value === 1 ? 1 : value === -1 ? -1 : 0;
     const { userId } = req.session;
 
     const upvote = await Upvote.findOne({
@@ -92,39 +91,49 @@ export class PostResolver {
     // and they are changing their vote
     if (upvote && upvote.value !== realValue) {
       await MyPostgresDataSource.transaction(async (tm) => {
+        if (realValue === 0) {
+          await tm.query(
+            `
+            delete from upvote
+            where "postId" = $1 and "userId" = $2
+            `,
+            [postId, userId]
+          );
+        } else {
+          await tm.query(
+            `
+            update upvote
+            set value = $1
+            where "postId" = $2 and "userId" = $3
+            `,
+            [realValue, postId, userId]
+          );
+        }
         await tm.query(
           `
-        update upvote
-        set value = $1
-        where "postId" = $2 and "userId" = $3
-`,
-          [realValue, postId, userId]
-        );
-        await tm.query(
-          `
-        update post
-        set points = points + $1
-        where id = $2
-`,
-          [2 * realValue, postId]
+          update post
+          set points = points + $1
+          where id = $2
+          `,
+          [realValue - upvote.value, postId]
         );
       });
-    } else if (!upvote) {
+    } else if (!upvote && realValue !== 0) {
       // has never voted before
       await MyPostgresDataSource.transaction(async (tm) => {
         await tm.query(
           `
-        insert into upvote ("userId", "postId", value)
-        values ($1, $2, $3);
-        `,
+          insert into upvote ("userId", "postId", value)
+          values ($1, $2, $3);
+          `,
           [userId, postId, realValue]
         );
         await tm.query(
           `
-        update post
-        set points = points + $1
-        where id = $2
-        `,
+          update post
+          set points = points + $1
+          where id = $2
+          `,
           [realValue, postId]
         );
       });
@@ -157,18 +166,6 @@ export class PostResolver {
   `,
       replacements
     );
-
-    // const qb = await MyPostgresDataSource.getRepository(Post)
-    //   .createQueryBuilder("p")
-    //   .innerJoinAndSelect("p.author", "u", 'u.id = p."authorId"')
-    //   .orderBy('p."createdAt"', "DESC")
-    //   .take(realLimitPlusOne);
-    // if (cursor) {
-    //   qb.where('p."createdAt" < :cursor', {
-    //     cursor: new Date(parseInt(cursor)),
-    //   });
-    // }
-    // const posts = await qb.getMany();
 
     return {
       posts: posts.slice(0, realLimit),
@@ -204,17 +201,30 @@ export class PostResolver {
     @Arg("id", () => Int) id: number,
     @Arg("title") title: string,
     @Arg("text") text: string,
+    @Arg("imageUrl") imageUrl: string,
+    @Arg("prevImagePublicId", { nullable: true }) prevImagePublicId: string,
     @Ctx() { req }: MyContext
   ): Promise<Post | null> {
     const result = await MyPostgresDataSource.createQueryBuilder()
       .update(Post)
-      .set({ title, text })
+      .set({ title, text, imageUrl })
       .where('id = :id and "authorId" = :authorId', {
         id,
         authorId: req.session.userId,
       })
       .returning("*")
       .execute();
+
+    // Delete the previous Cloudinary image if there was one
+    if (prevImagePublicId) {
+      try {
+        const result = await cloudinary.v2.uploader.destroy(prevImagePublicId);
+        console.log(result);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
     return result.raw[0];
   }
 

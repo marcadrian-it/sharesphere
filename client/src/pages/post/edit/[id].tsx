@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Box } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 
@@ -9,10 +9,13 @@ import { useUpdatePostMutation } from "../../../generated/graphql";
 import { useGetIntId } from "../../../utils/useGetIntId";
 import { useRouter } from "next/router";
 import { withApollo2 } from "../../../utils/withApollo";
+import { InputFile } from "../../../components/InputFile";
 
 const EditPost = ({}) => {
   const Router = useRouter();
   const intId = useGetIntId();
+  const [file, setFile] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState<string>("");
   const { data, loading } = usePostQuery({
     skip: intId === -1,
     variables: {
@@ -30,15 +33,81 @@ const EditPost = ({}) => {
   return (
     <Layout variant="small">
       <Formik
-        initialValues={{ title: data.post.title, text: data.post.text }}
+        initialValues={{
+          title: data.post.title,
+          text: data.post.text,
+          imageUrl: data.post.imageUrl,
+        }}
         onSubmit={async (values) => {
-          await editPost({ variables: { id: intId, ...values } });
+          let finalImageUrl = imageUrl;
+
+          // If the user has selected a file, upload it to Cloudinary
+          if (file) {
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("upload_preset", "cjbazo7v");
+            const response = await fetch(
+              `https://api.cloudinary.com/v1_1/dmzmqvehw/image/upload`,
+              {
+                method: "POST",
+                body: formData,
+              }
+            );
+            const data = await response.json();
+            finalImageUrl = data.secure_url;
+          } else if (imageUrl) {
+            // Check if imageUrl is a valid URL
+            try {
+              new URL(imageUrl);
+              // If the user has provided a valid imageUrl, upload it to Cloudinary
+              const formData = new FormData();
+              formData.append("file", imageUrl);
+              formData.append("upload_preset", "cjbazo7v");
+              const response = await fetch(
+                `https://api.cloudinary.com/v1_1/dmzmqvehw/image/upload`,
+                {
+                  method: "POST",
+                  body: formData,
+                }
+              );
+              const data = await response.json();
+              finalImageUrl = data.secure_url;
+            } catch (error) {
+              // If imageUrl is not a valid URL, call editPost with an empty imageUrl
+              finalImageUrl = "";
+            }
+          }
+
+          // Update the post with the final image URL
+          await editPost({
+            variables: {
+              id: intId,
+              ...values,
+              imageUrl: finalImageUrl,
+              prevImagePublicId: data.post
+                ? data.post.imageUrl
+                  ? data.post.imageUrl.match(/\/([^/]+)\.[^/.]+$/)?.[1]
+                  : null
+                : null,
+            },
+          });
+
           Router.push("/");
         }}
       >
         {({ isSubmitting }) => (
           <Form>
             <InputField name="title" placeholder="title" label="Title" />
+            <Box mt={4}>
+              <InputFile
+                onFileChange={(file) => {
+                  setFile(file);
+                }}
+                onImageUrlChange={(imageUrl) => {
+                  setImageUrl(imageUrl);
+                }}
+              />
+            </Box>
             <Box mt={4}>
               <InputField
                 height={300}

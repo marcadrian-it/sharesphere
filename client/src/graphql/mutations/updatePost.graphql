@@ -1,5 +1,17 @@
-mutation UpdatePost($id: Int!, $title: String!, $text: String!) {
-  updatePost(id: $id, title: $title, text: $text) {
+mutation UpdatePost(
+  $id: Int!
+  $title: String!
+  $text: String!
+  $imageUrl: String!
+  $prevImagePublicId: String
+) {
+  updatePost(
+    id: $id
+    title: $title
+    text: $text
+    imageUrl: $imageUrl
+    prevImagePublicId: $prevImagePublicId
+  ) {
     id
     title
     imageUrl

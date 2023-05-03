@@ -38,7 +38,8 @@ const updateAfterVote = (
       return;
     }
     const newPoints =
-      (data.points as number) + (!data.voteStatus ? 1 : 2) * value;
+      (data.points as number) +
+      (!data.voteStatus ? value : value - data.voteStatus);
     cache.writeFragment({
       id: "Post:" + postId,
       fragment: gql`
@@ -63,17 +64,24 @@ export const UpvoteSection: React.FC<UpvoteSectionProps> = ({ post }) => {
       <IconButton
         onClick={async () => {
           if (post.voteStatus === 1) {
-            return;
+            await vote({
+              variables: {
+                postId: post.id,
+                value: 0,
+              },
+              update: (cache) => updateAfterVote(0, post.id, cache),
+            });
+          } else {
+            setLoadingState("upvote-loading");
+            await vote({
+              variables: {
+                postId: post.id,
+                value: 1,
+              },
+              update: (cache) => updateAfterVote(1, post.id, cache),
+            });
+            setLoadingState("not-loading");
           }
-          setLoadingState("upvote-loading");
-          await vote({
-            variables: {
-              postId: post.id,
-              value: 1,
-            },
-            update: (cache) => updateAfterVote(1, post.id, cache),
-          });
-          setLoadingState("not-loading");
         }}
         fontSize="22px"
         colorScheme={post.voteStatus === 1 ? "blue" : undefined}
@@ -87,17 +95,24 @@ export const UpvoteSection: React.FC<UpvoteSectionProps> = ({ post }) => {
       <IconButton
         onClick={async () => {
           if (post.voteStatus === -1) {
-            return;
+            await vote({
+              variables: {
+                postId: post.id,
+                value: 0,
+              },
+              update: (cache) => updateAfterVote(0, post.id, cache),
+            });
+          } else {
+            setLoadingState("downvote-loading");
+            await vote({
+              variables: {
+                postId: post.id,
+                value: -1,
+              },
+              update: (cache) => updateAfterVote(-1, post.id, cache),
+            });
+            setLoadingState("not-loading");
           }
-          setLoadingState("downvote-loading");
-          await vote({
-            variables: {
-              postId: post.id,
-              value: -1,
-            },
-            update: (cache) => updateAfterVote(-1, post.id, cache),
-          });
-          setLoadingState("not-loading");
         }}
         fontSize="22px"
         colorScheme={post.voteStatus === -1 ? "red" : undefined}

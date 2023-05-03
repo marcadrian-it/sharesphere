@@ -70,6 +70,8 @@ export type MutationRegisterArgs = {
 
 export type MutationUpdatePostArgs = {
   id: Scalars['Int'];
+  imageUrl: Scalars['String'];
+  prevImagePublicId?: InputMaybe<Scalars['String']>;
   text: Scalars['String'];
   title: Scalars['String'];
 };
@@ -209,6 +211,8 @@ export type UpdatePostMutationVariables = Exact<{
   id: Scalars['Int'];
   title: Scalars['String'];
   text: Scalars['String'];
+  imageUrl: Scalars['String'];
+  prevImagePublicId?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -516,8 +520,14 @@ export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
 export const UpdatePostDocument = gql`
-    mutation UpdatePost($id: Int!, $title: String!, $text: String!) {
-  updatePost(id: $id, title: $title, text: $text) {
+    mutation UpdatePost($id: Int!, $title: String!, $text: String!, $imageUrl: String!, $prevImagePublicId: String) {
+  updatePost(
+    id: $id
+    title: $title
+    text: $text
+    imageUrl: $imageUrl
+    prevImagePublicId: $prevImagePublicId
+  ) {
     id
     title
     imageUrl
@@ -544,6 +554,8 @@ export type UpdatePostMutationFn = Apollo.MutationFunction<UpdatePostMutation, U
  *      id: // value for 'id'
  *      title: // value for 'title'
  *      text: // value for 'text'
+ *      imageUrl: // value for 'imageUrl'
+ *      prevImagePublicId: // value for 'prevImagePublicId'
  *   },
  * });
  */
