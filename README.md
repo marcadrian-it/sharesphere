@@ -22,7 +22,6 @@ To visit the website, click on the logo.
 - TypeScript
 - Apollo GraphQL/URQL
 - NodeJS v16
-- ChakraUI
 - Yarn v1.22.19
 
 ## Backend
@@ -37,6 +36,7 @@ To visit the website, click on the logo.
 ## Frontend
 - Vercel
 - NextJS
+- ChakraUI
 - GraphQL Code Generator
 
 ## CDN
