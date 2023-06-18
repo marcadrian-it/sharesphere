@@ -14,6 +14,7 @@ import {
   Link,
   Stack,
   Text,
+  ScaleFade,
 } from "@chakra-ui/react";
 import { UpvoteSection } from "../components/UpvoteSection";
 
@@ -45,36 +46,42 @@ const Index = () => {
         <Stack spacing={8}>
           {data!.posts.posts.map((p) =>
             !p ? null : (
-              <Flex key={p.id} p={5} shadow="md" borderWidth="1px">
-                <UpvoteSection post={p} />
-                <Box flex={1}>
-                  <Link as={NextLink} href={`/post/${p.id}`}>
-                    <Heading fontSize="xl">{p.title}</Heading>
-                  </Link>
-                  <Center>
-                    <Img
-                      src={p.imageUrl}
-                      maxH="600"
-                      objectFit="cover"
-                      mt={4}
-                    ></Img>
-                  </Center>
+              <ScaleFade
+                initialScale={0.9}
+                in={true}
+                whileHover={{ scale: 1.05 }}
+              >
+                <Flex key={p.id} p={5} shadow="md" borderWidth="1px">
+                  <UpvoteSection post={p} />
+                  <Box flex={1}>
+                    <Link as={NextLink} href={`/post/${p.id}`}>
+                      <Heading fontSize="xl">{p.title}</Heading>
+                    </Link>
+                    <Center>
+                      <Img
+                        src={p.imageUrl}
+                        maxH="600"
+                        objectFit="cover"
+                        mt={4}
+                      ></Img>
+                    </Center>
 
-                  <Text>posted by: {p.author.username}</Text>
-                  <Flex align="center">
-                    <Text flex={1} mt={4}>
-                      {p.textSnippet}
-                    </Text>
-                    <Box ml="auto">
-                      <EditDeletePostButtons
-                        id={p.id}
-                        authorId={p.author.id}
-                        imageUrl={p.imageUrl}
-                      />
-                    </Box>
-                  </Flex>
-                </Box>
-              </Flex>
+                    <Text>posted by: {p.author.username}</Text>
+                    <Flex align="center">
+                      <Text flex={1} mt={4}>
+                        {p.textSnippet}
+                      </Text>
+                      <Box ml="auto">
+                        <EditDeletePostButtons
+                          id={p.id}
+                          authorId={p.author.id}
+                          imageUrl={p.imageUrl}
+                        />
+                      </Box>
+                    </Flex>
+                  </Box>
+                </Flex>
+              </ScaleFade>
             )
           )}
         </Stack>
