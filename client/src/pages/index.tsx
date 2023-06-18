@@ -43,7 +43,7 @@ const Index = () => {
       {!data && loading ? (
         <Box>loading...</Box>
       ) : (
-        <Stack spacing={8}>
+        <Stack spacing={8} mb={4}>
           {data!.posts.posts.map((p) =>
             !p ? null : (
               <ScaleFade
@@ -87,7 +87,7 @@ const Index = () => {
         </Stack>
       )}
       {data && data.posts.hasMore ? (
-        <Flex align="center" mt={4} mb={4}>
+        <Flex align="center" mt={6} mb={8}>
           <Button
             onClick={() => {
               fetchMore({
