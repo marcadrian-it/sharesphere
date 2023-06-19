@@ -59,7 +59,26 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
     );
   }
   return (
-    <Flex zIndex={1} position="sticky" top={0} bg="tan" p={4}>
+    <Flex
+      zIndex={1}
+      position="sticky"
+      top={0}
+      p={4}
+      borderBottom="1px solid silver"
+      sx={{
+        "::before": {
+          content: '""',
+          position: "absolute",
+          top: -2,
+          left: -1,
+          right: 0,
+          bottom: 0,
+          bg: "rgba(210, 180, 140, 0.95)",
+          filter: "blur(4px)",
+          zIndex: -1,
+        },
+      }}
+    >
       <Flex flex={1} m="auto" maxW={800} align="center">
         <Link as={NextLink} href="/">
           <Flex flexDirection="row" align="center">
