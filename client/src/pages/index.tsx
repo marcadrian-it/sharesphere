@@ -66,7 +66,7 @@ const Index = () => {
                       ></Img>
                     </Center>
 
-                    <Text>posted by: {p.author.username}</Text>
+                    <Text mt={4}>posted by: {p.author.username}</Text>
                     <Flex align="center">
                       <Text flex={1} mt={4}>
                         {p.textSnippet}

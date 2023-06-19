@@ -22,19 +22,25 @@ export const Post = ({}) => {
 
   return (
     <Layout>
-      <Heading mb={4}>{data?.post?.title}</Heading>
-      <Box mb={4}>
+      <Heading mb={4} pl={4}>
+        {data?.post?.title}
+      </Heading>
+      <Box mb={4} pl={4}>
         <Flex alignItems="center">
           <UpvoteSection post={{ ...data.post, textSnippet: data.post.text }} />
-          <Img src={data?.post?.imageUrl} />
+          <Flex alignItems="center" mb={4}>
+            <Img src={data?.post?.imageUrl} />
+          </Flex>
         </Flex>
         {data?.post?.text}
       </Box>
-      <EditDeletePostButtons
-        id={data.post.id}
-        authorId={data.post.author.id}
-        imageUrl={data.post.imageUrl}
-      />
+      <Flex pl={4}>
+        <EditDeletePostButtons
+          id={data.post.id}
+          authorId={data.post.author.id}
+          imageUrl={data.post.imageUrl}
+        />
+      </Flex>
     </Layout>
   );
 };
