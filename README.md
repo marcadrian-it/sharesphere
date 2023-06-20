@@ -21,7 +21,7 @@ To visit the website, click on the logo.
 
 - TypeScript
 - Apollo GraphQL/URQL
-- NodeJS v16
+- NodeJS v18
 - Yarn v1.22.19
 
 ## Backend
