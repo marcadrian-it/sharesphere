@@ -8,6 +8,7 @@ import { useLogoutMutation, useMeQuery } from "../generated/graphql";
 import { isServer } from "../utils/isServer";
 import { useEffect, useState } from "react";
 import { useApolloClient } from "@apollo/client";
+import { MeQuery } from "../generated/graphql";
 import { ChevronDownIcon, CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 
 export const NavBar = () => {
@@ -27,6 +28,7 @@ export const NavBar = () => {
   if (!showContent) {
     body = <Box>Loading...</Box>;
   } else if (!data?.me) {
+    
     body = (
       <Flex ml={2} flexDirection={"column"} align="center">
       <Box>
@@ -100,7 +102,7 @@ export const NavBar = () => {
             </Flex>
           </Link>
           <Flex display={{ base: "none", md: "flex" }} ml={10}>
-            <DesktopNav />
+            <DesktopNav data={data} />
           </Flex>
         </Flex>
         <Stack flex={{ base: 1, md: 0 }} justify="flex-end" align="center" direction="row" spacing={6}>
@@ -110,22 +112,29 @@ export const NavBar = () => {
         </Stack>
       </Flex>
       <Collapse in={isOpen} animateOpacity>
-        <MobileNav />
+        <MobileNav data={data} />
       </Collapse>
     </Box>
   );
 };
 
-const DesktopNav = () => {
+interface DesktopNavProps {
+  data: MeQuery | undefined;
+}
+
+
+const DesktopNav = ({ data }: DesktopNavProps ) => {
   return (
     <Stack direction="row" spacing={4}>
       {NAV_ITEMS.map((navItem) => (
         <Box key={navItem.label}>
           <Link p={2} href={navItem.href ?? "#"} fontSize="sm" fontWeight={500} color="gray.600" _hover={{ textDecoration: "none", color: "gray.800" }}>
             <Flex flexDirection="row" align="center">
+            {data?.me && (
             <Button>
             {navItem.label}
             </Button>
+            )}
             </Flex>
           </Link>
         </Box>
@@ -134,7 +143,11 @@ const DesktopNav = () => {
   );
 };
 
-const MobileNav = () => {
+interface MobileNavProps {
+  data: MeQuery | undefined;
+}
+
+const MobileNav = ({ data }: MobileNavProps) => {
   return (
     <Stack
       borderBottom="1px solid silver"
@@ -142,9 +155,13 @@ const MobileNav = () => {
       p={4}
       display={{ md: 'none' }}>
       {NAV_ITEMS.map((navItem) => (
-        <Button key={navItem.label}>
+        <Box key={navItem.label}>
+        {data?.me && (
+        <Button>
         <MobileNavItem {...navItem} />
         </Button>
+        )}
+        </Box>
       ))}
     </Stack>
   );

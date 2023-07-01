@@ -7,10 +7,12 @@ import { InputField } from "../components/InputField";
 import { InputFile } from "../components/InputFile";
 import { Layout } from "../components/Layout";
 import { useCreatePostMutation } from "../generated/graphql";
+import { useIsAuth } from "../utils/useIsAuth";
 
 import { withApollo2 } from "../utils/withApollo";
 
 const CreatePost: React.FC<{}> = ({}) => {
+  useIsAuth();
   const router = useRouter();
   const [createPost] = useCreatePostMutation();
   const [file, setFile] = useState<File | null>(null);

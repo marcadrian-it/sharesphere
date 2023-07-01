@@ -10,8 +10,10 @@ import { useGetIntId } from "../../../utils/useGetIntId";
 import { useRouter } from "next/router";
 import { withApollo2 } from "../../../utils/withApollo";
 import { InputFile } from "../../../components/InputFile";
+import { useIsAuth } from "../../../utils/useIsAuth";
 
 const EditPost = ({}) => {
+  useIsAuth();
   const Router = useRouter();
   const intId = useGetIntId();
   const [file, setFile] = useState<File | null>(null);

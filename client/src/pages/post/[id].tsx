@@ -3,7 +3,6 @@ import { useGetPostFromUrl } from "../../utils/useGetPostFromUrl";
 import { Layout } from "../../components/Layout";
 import {
   Box,
-  Heading,
   Img,
   Flex,
   Container,
