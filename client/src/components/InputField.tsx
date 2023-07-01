@@ -18,7 +18,7 @@ export const InputField: React.FC<InputFieldProps> = ({label,textarea, size: _, 
         return (
             <FormControl isInvalid={!!error}>  
             <FormLabel htmlFor={field.name}>{label}</FormLabel>
-            <InputOrTextarea {...field} {...props} id={field.name} />
+            <InputOrTextarea {...field} {...props} id={field.name} maxWidth={{ base: "300", md: "500" }} />
            {error ? <FormErrorMessage>{error}</FormErrorMessage> : null }
           </FormControl>
         );

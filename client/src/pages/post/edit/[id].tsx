@@ -32,6 +32,7 @@ const EditPost = ({}) => {
 
   return (
     <Layout variant="small">
+      <Box pl={2} pb={2}>
       <Formik
         initialValues={{
           title: data.post.title,
@@ -76,6 +77,8 @@ const EditPost = ({}) => {
               // If imageUrl is not a valid URL, call editPost with an empty imageUrl
               finalImageUrl = "";
             }
+          } else {
+            finalImageUrl = data?.post?.imageUrl || "";
           }
 
           // Update the post with the final image URL
@@ -129,6 +132,7 @@ const EditPost = ({}) => {
           </Form>
         )}
       </Formik>
+      </Box>
     </Layout>
   );
 };
