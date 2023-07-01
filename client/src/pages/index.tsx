@@ -15,6 +15,7 @@ import {
   Stack,
   Text,
   ScaleFade,
+  Badge,
 } from "@chakra-ui/react";
 import { UpvoteSection } from "../components/UpvoteSection";
 
@@ -57,6 +58,7 @@ const Index = () => {
                   <Box flex={1}>
                     <Link as={NextLink} href={`/post/${p.id}`}>
                       <Heading fontSize="xl">{p.title}</Heading>
+
                     <Center>
                       <Img
                         src={p.imageUrl}
@@ -67,7 +69,9 @@ const Index = () => {
                     </Center>
                     </Link>
 
-                    <Text mt={4}>posted by: {p.author.username}</Text>
+                    <Text mt={4}>by:{" "} 
+                    <Badge colorScheme="green">{p.author.username}</Badge>
+                    </Text>
                     <Flex align="center">
                       <Text flex={1} mt={4}>
                         {p.textSnippet}

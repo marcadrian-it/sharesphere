@@ -75,12 +75,11 @@ export const NavBar = () => {
           right: 0,
           bottom: 0,
           bg: "rgba(210, 180, 140, 0.95)",
-          filter: "blur(2px)",
           zIndex: -1,
         },
       }}
     >
-        <Flex flex={{ base: 1, md: "auto" }} maxW={800} ml={{ base: -2 }} display={{ base: "flex", md: "none" }}>
+        <Flex flex={{ base: 1, md: "auto" }} align="center" maxW={800} ml={{ base: -2 }} display={{ base: "flex", md: "none" }}>
           <IconButton
             onClick={onToggle}
             icon={isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />}
@@ -104,7 +103,7 @@ export const NavBar = () => {
             <DesktopNav />
           </Flex>
         </Flex>
-        <Stack flex={{ base: 1, md: 0 }} justify="flex-end" direction="row" spacing={6}>
+        <Stack flex={{ base: 1, md: 0 }} justify="flex-end" align="center" direction="row" spacing={6}>
             <Box>
             {body}
             </Box>
@@ -138,6 +137,7 @@ const DesktopNav = () => {
 const MobileNav = () => {
   return (
     <Stack
+      borderBottom="1px solid silver"
       bg='white'
       p={4}
       display={{ md: 'none' }}>

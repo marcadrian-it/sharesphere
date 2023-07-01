@@ -77,6 +77,8 @@ const EditPost = ({}) => {
               // If imageUrl is not a valid URL, call editPost with an empty imageUrl
               finalImageUrl = "";
             }
+          } else {
+            finalImageUrl = data?.post?.imageUrl || "";
           }
 
           // Update the post with the final image URL
