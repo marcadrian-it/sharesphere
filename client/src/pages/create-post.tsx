@@ -18,6 +18,7 @@ const CreatePost: React.FC<{}> = ({}) => {
 
   return (
     <Layout variant="small">
+      <Box pl={2} pb={2}>
       <Formik
         initialValues={{ title: "", text: "" }}
         onSubmit={async (values) => {
@@ -74,7 +75,8 @@ const CreatePost: React.FC<{}> = ({}) => {
       >
         {({ isSubmitting }) => (
           <Form>
-            <InputField name="title" placeholder="title" label="Title" />
+            
+            <InputField name="title" placeholder="title" label="Title"/>
             <Box mt={4}>
               <InputFile
                 onFileChange={(file) => {
@@ -106,6 +108,7 @@ const CreatePost: React.FC<{}> = ({}) => {
           </Form>
         )}
       </Formik>
+      </Box>
     </Layout>
   );
 };

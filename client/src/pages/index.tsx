@@ -43,10 +43,11 @@ const Index = () => {
       {!data && loading ? (
         <Box>loading...</Box>
       ) : (
-        <Stack spacing={8} mb={4}>
+        <Stack spacing={8} mb={4} p={4}>
           {data!.posts.posts.map((p) =>
             !p ? null : (
               <ScaleFade
+                key={p.id}
                 initialScale={0.9}
                 in={true}
                 whileHover={{ scale: 1.05 }}
@@ -56,7 +57,6 @@ const Index = () => {
                   <Box flex={1}>
                     <Link as={NextLink} href={`/post/${p.id}`}>
                       <Heading fontSize="xl">{p.title}</Heading>
-                    </Link>
                     <Center>
                       <Img
                         src={p.imageUrl}
@@ -65,6 +65,7 @@ const Index = () => {
                         mt={4}
                       ></Img>
                     </Center>
+                    </Link>
 
                     <Text mt={4}>posted by: {p.author.username}</Text>
                     <Flex align="center">

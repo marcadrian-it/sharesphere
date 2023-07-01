@@ -32,6 +32,7 @@ const EditPost = ({}) => {
 
   return (
     <Layout variant="small">
+      <Box pl={2} pb={2}>
       <Formik
         initialValues={{
           title: data.post.title,
@@ -129,6 +130,7 @@ const EditPost = ({}) => {
           </Form>
         )}
       </Formik>
+      </Box>
     </Layout>
   );
 };
