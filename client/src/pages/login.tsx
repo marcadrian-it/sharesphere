@@ -1,6 +1,6 @@
 import React from "react";
 import { Form, Formik } from "formik";
-import { Box, Button, Link } from "@chakra-ui/react";
+import { Box, Button, Flex, Link } from "@chakra-ui/react";
 import { Wrapper } from "../components/Wrapper";
 import { InputField } from "../components/InputField";
 import { MeDocument, MeQuery, useLoginMutation } from "../generated/graphql";
@@ -14,65 +14,74 @@ const Login: React.FC<{}> = ({}) => {
   const [login] = useLoginMutation();
   return (
     <Wrapper variant="small">
-      <Box pl={2} pb={2}>
-      <Formik
-        initialValues={{ usernameOrEmail: "", password: "" }}
-        onSubmit={async (values, { setErrors }) => {
-          const response = await login({
-            variables: values,
-            update: (cache, { data }) => {
-              cache.writeQuery<MeQuery>({
-                query: MeDocument,
-                data: {
-                  __typename: "Query",
-                  me: data?.login.user,
-                },
-              });
-              cache.evict({ fieldName: "posts:{}" });
-            },
-          });
-          if (response.data?.login.errors) {
-            setErrors(toErrorMap(response.data.login.errors));
-          } else if (response.data?.login.user) {
-            if (typeof router.query.next === "string") {
-              router.push(router.query.next);
-            } else {
-              router.push("/");
-            }
-          }
-        }}
+      <Box
+        p={5}
+        bg="white"
+        borderRadius="lg"
+        border="1px"
+        borderColor="gray.300"
       >
-        {({ isSubmitting }) => (
-          <Form>
-            <InputField
-              name="usernameOrEmail"
-              placeholder="username or email"
-              label="Username or Email"
-            />
-            <Box mt={4}>
+        <Formik
+          initialValues={{ usernameOrEmail: "", password: "" }}
+          onSubmit={async (values, { setErrors }) => {
+            const response = await login({
+              variables: values,
+              update: (cache, { data }) => {
+                cache.writeQuery<MeQuery>({
+                  query: MeDocument,
+                  data: {
+                    __typename: "Query",
+                    me: data?.login.user,
+                  },
+                });
+                cache.evict({ fieldName: "posts:{}" });
+              },
+            });
+            if (response.data?.login.errors) {
+              setErrors(toErrorMap(response.data.login.errors));
+            } else if (response.data?.login.user) {
+              if (typeof router.query.next === "string") {
+                router.push(router.query.next);
+              } else {
+                router.push("/");
+              }
+            }
+          }}
+        >
+          {({ isSubmitting }) => (
+            <Form>
               <InputField
-                name="password"
-                placeholder="password"
-                label="Password"
-                type="password"
+                name="usernameOrEmail"
+                placeholder="username or email"
+                label="Username or Email"
               />
-            </Box>
-            <Box mt={2}>
-              <Link as={NextLink} href="/forgot-password">
-                recover password
-              </Link>
-            </Box>
-            <Button
-              mt={4}
-              type="submit"
-              colorScheme="teal"
-              isLoading={isSubmitting}
-            >
-              login
-            </Button>
-          </Form>
-        )}
-      </Formik>
+              <Box mt={4}>
+                <InputField
+                  name="password"
+                  placeholder="password"
+                  label="Password"
+                  type="password"
+                />
+              </Box>
+              <Flex direction={"column"} mt={2}>
+                <Link as={NextLink} href="/forgot-password">
+                  recover password
+                </Link>
+                <Link mt={4} as={NextLink} href="/register">
+                  No account? Register here
+                </Link>
+              </Flex>
+              <Button
+                mt={4}
+                type="submit"
+                colorScheme="teal"
+                isLoading={isSubmitting}
+              >
+                login
+              </Button>
+            </Form>
+          )}
+        </Formik>
       </Box>
     </Wrapper>
   );

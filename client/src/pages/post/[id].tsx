@@ -12,7 +12,7 @@ import {
   ModalContent,
   ModalBody,
   useDisclosure,
-  ModalCloseButton
+  ModalCloseButton,
 } from "@chakra-ui/react";
 import { EditDeletePostButtons } from "../../components/EditDeletePostButtons";
 import { withApollo2 } from "../../utils/withApollo";
@@ -35,13 +35,29 @@ export const Post = ({}) => {
 
   return (
     <Layout>
-      <Text mb={4} pl={4} fontSize="4xl" fontWeight="bold" letterSpacing="wide" textTransform="uppercase">
+      <Text
+        mb={4}
+        pl={4}
+        fontSize="4xl"
+        fontWeight="bold"
+        letterSpacing="wide"
+        textTransform="uppercase"
+      >
         {data?.post?.title}
       </Text>
-      <Container mb={4} maxW="container.md" border="1px solid" borderColor="gray.200" borderRadius="lg">
+      <Container
+        mb={4}
+        maxW="container.md"
+        border="1px solid"
+        bg={"#ffff"}
+        borderColor="gray.200"
+        borderRadius="lg"
+      >
         <Box>
           <Flex alignItems="center">
-            <UpvoteSection post={{ ...data.post, textSnippet: data.post.text }} />
+            <UpvoteSection
+              post={{ ...data.post, textSnippet: data.post.text }}
+            />
             <Flex alignItems="center" mb={4}>
               <Img src={data?.post?.imageUrl} onClick={onOpen} />
             </Flex>
@@ -56,19 +72,23 @@ export const Post = ({}) => {
         </Flex>
       </Container>
       {data.post.text && (
-  <Container mb={4} mt={4} maxW="container.md" border="1px solid" borderColor="gray.200" borderRadius="lg">
-    <Box>
-      {data?.post?.text}
-    </Box>
-  </Container>
-)}
-
-
+        <Container
+          mb={4}
+          mt={4}
+          bg={"#ffff"}
+          maxW="container.md"
+          border="1px solid"
+          borderColor="gray.200"
+          borderRadius="lg"
+        >
+          <Box>{data?.post?.text}</Box>
+        </Container>
+      )}
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent maxW={{ base: "md", md: "3xl" }}>
-        <ModalCloseButton />
+          <ModalCloseButton />
           <ModalBody justifyContent="center">
             <Img src={data?.post?.imageUrl} />
           </ModalBody>

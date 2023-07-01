@@ -53,24 +53,30 @@ const Index = () => {
                 in={true}
                 whileHover={{ scale: 1.05 }}
               >
-                <Flex key={p.id} p={5} shadow="md" borderWidth="1px">
+                <Flex
+                  key={p.id}
+                  p={5}
+                  shadow="md"
+                  borderWidth="1px"
+                  bg={"#ffff"}
+                >
                   <UpvoteSection post={p} />
                   <Box flex={1}>
                     <Link as={NextLink} href={`/post/${p.id}`}>
                       <Heading fontSize="xl">{p.title}</Heading>
 
-                    <Center>
-                      <Img
-                        src={p.imageUrl}
-                        maxH="600"
-                        objectFit="cover"
-                        mt={4}
-                      ></Img>
-                    </Center>
+                      <Center>
+                        <Img
+                          src={p.imageUrl}
+                          maxH="600"
+                          objectFit="cover"
+                          mt={4}
+                        ></Img>
+                      </Center>
                     </Link>
 
-                    <Text mt={4}>by:{" "} 
-                    <Badge colorScheme="green">{p.author.username}</Badge>
+                    <Text mt={4}>
+                      by: <Badge colorScheme="green">{p.author.username}</Badge>
                     </Text>
                     <Flex align="center">
                       <Text flex={1} mt={4}>
