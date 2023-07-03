@@ -14,6 +14,7 @@ import {
   useDisclosure,
   ModalCloseButton,
   Badge,
+  Center,
 } from "@chakra-ui/react";
 import { timeDifference } from "../../utils/timeUtil";
 import { EditDeletePostButtons } from "../../components/EditDeletePostButtons";
@@ -58,13 +59,19 @@ export const Post = ({}) => {
         borderRadius="lg"
       >
         <Box>
-          <Flex alignItems="center">
+          <Flex alignItems="center" justifyContent="space-between">
             <UpvoteSection
               post={{ ...data.post, textSnippet: data.post.text }}
             />
-            <Flex alignItems="center" mb={4} mt={4} justifyContent="center">
-              <Img src={data?.post?.imageUrl} onClick={onOpen} />
-            </Flex>
+            <Box flexGrow={1} mt={4}>
+              <Center>
+                <Img
+                  src={data?.post?.imageUrl}
+                  onClick={onOpen}
+                  cursor="pointer"
+                />
+              </Center>
+            </Box>
           </Flex>
         </Box>
         <Text mt={4}>
@@ -108,7 +115,9 @@ export const Post = ({}) => {
         <ModalContent maxW={{ base: "md", md: "3xl" }}>
           <ModalCloseButton />
           <ModalBody justifyContent="center">
-            <Img src={data?.post?.imageUrl} />
+            <Center>
+              <Img src={data?.post?.imageUrl} />
+            </Center>
           </ModalBody>
         </ModalContent>
       </Modal>

@@ -16,20 +16,18 @@ export const InputFile: React.FC<InputFileProps> = ({
 
   return (
     <>
-      <Box>
-        <Button
-          onClick={() => setUploadMethod("file")}
-          variant={uploadMethod === "file" ? "solid" : "outline"}
-        >
-          Upload image
-        </Button>
-        <Button
-          onClick={() => setUploadMethod("url")}
-          variant={uploadMethod === "url" ? "solid" : "outline"}
-        >
-          Upload image from a link
-        </Button>
-      </Box>
+      <Button
+        onClick={() => setUploadMethod("file")}
+        variant={uploadMethod === "file" ? "solid" : "outline"}
+      >
+        Upload image
+      </Button>
+      <Button
+        onClick={() => setUploadMethod("url")}
+        variant={uploadMethod === "url" ? "solid" : "outline"}
+      >
+        Upload image from a link
+      </Button>
 
       {uploadMethod === "file" && (
         <Box>
