@@ -1,0 +1,10 @@
+mutation CreateComment($postId: Int!, $text: String!) {
+  addComment(postId: $postId, text: $text) {
+    id
+    text
+    authorId
+    points
+    createdAt
+    updatedAt
+  }
+}
