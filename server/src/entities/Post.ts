@@ -10,6 +10,7 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { User } from "./User";
+import { Comment } from "./Comment";
 import { Upvote } from "./Upvote";
 
 @ObjectType()
@@ -45,6 +46,9 @@ export class Post extends BaseEntity {
   @Field()
   @ManyToOne(() => User, (user) => user.posts)
   author: User;
+
+  @OneToMany(() => Comment, (comment) => comment.post)
+  comments: Comment[];
 
   @OneToMany(() => Upvote, (upvote) => upvote.post)
   upvotes: Upvote[];

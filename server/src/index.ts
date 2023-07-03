@@ -7,7 +7,7 @@ import express from "express";
 import { ApolloServer } from "@apollo/server";
 import http from "http";
 import { buildSchema } from "type-graphql";
-import { HelloResolver } from "./resolvers/hello";
+import { CommentResolver } from "./resolvers/comment";
 import { PostResolver } from "./resolvers/post";
 import { UserResolver } from "./resolvers/user";
 import cors from "cors";
@@ -20,6 +20,7 @@ import RedisStore from "connect-redis";
 import Redis from "ioredis";
 import { MyContext } from "./types";
 import { MyPostgresDataSource } from "./data-source";
+import { createCommentLoader } from "./utils/createCommentLoader";
 
 const main = async () => {
   await MyPostgresDataSource.initialize();
@@ -51,7 +52,7 @@ const main = async () => {
         maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years
         httpOnly: true,
         secure: __prod__, // cookie only works in https
-        sameSite: "lax", // csrf
+        sameSite: "strict", // csrf
         domain: __prod__ ? ".marcadrian.dev" : undefined,
       },
       saveUninitialized: false,
@@ -62,7 +63,7 @@ const main = async () => {
 
   const server = new ApolloServer<MyContext>({
     schema: await buildSchema({
-      resolvers: [HelloResolver, PostResolver, UserResolver],
+      resolvers: [CommentResolver, PostResolver, UserResolver],
       validate: false,
     }),
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
@@ -80,6 +81,7 @@ const main = async () => {
         redis,
         userLoader: createUserLoader(),
         upvoteLoader: createUpvoteLoader(),
+        commentLoader: createCommentLoader(),
       }),
     })
   );

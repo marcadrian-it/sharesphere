@@ -17,6 +17,7 @@ import { isAuth } from "../middleware/isAuth";
 import { MyPostgresDataSource } from "../data-source";
 import { Int } from "type-graphql";
 import { Upvote } from "../entities/Upvote";
+import { Comment } from "../entities/Comment";
 import { User } from "../entities/User";
 import cloudinary from "cloudinary";
 
@@ -54,6 +55,12 @@ export class PostResolver {
   @FieldResolver(() => User)
   author(@Root() post: Post, @Ctx() { userLoader }: MyContext) {
     return userLoader.load(post.authorId);
+  }
+
+  @FieldResolver(() => [Comment], { nullable: true })
+  async comments(@Root() post: Post, @Ctx() { commentLoader }: MyContext) {
+    const comments = await commentLoader.load(post.id);
+    return comments || [];
   }
 
   @FieldResolver(() => Int, { nullable: true })
@@ -175,7 +182,7 @@ export class PostResolver {
 
   @Query(() => Post, { nullable: true })
   post(@Arg("id", () => Int) id: number): Promise<Post | null> {
-    return Post.findOne({ where: { id }, relations: ["author"] });
+    return Post.findOne({ where: { id }, relations: ["author", "comments"] });
   }
 
   @Mutation(() => Post)

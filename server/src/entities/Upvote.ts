@@ -1,6 +1,7 @@
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
 import { User } from "./User";
 import { Post } from "./Post";
+import { Comment } from "./Comment";
 
 //many to many relationship
 //user <-> posts
@@ -26,4 +27,12 @@ export class Upvote extends BaseEntity {
     onDelete: "CASCADE",
   })
   post: Post;
+
+  @Column()
+  commentId: number;
+
+  @ManyToOne(() => Comment, (comment) => comment.upvotes, {
+    onDelete: "CASCADE",
+  })
+  comment: Comment;
 }
