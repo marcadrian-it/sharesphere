@@ -28,6 +28,7 @@ export const EditDeletePostButtons: React.FC<EditDeletePostButtonsProps> = ({
           href={`/post/edit/${id}`}
           aria-label="edit post"
           variant="solid"
+          border="1px solid silver"
           onClick={() => {}}
           icon={<EditIcon />}
         />
@@ -35,6 +36,7 @@ export const EditDeletePostButtons: React.FC<EditDeletePostButtonsProps> = ({
           ml={4}
           aria-label="delete post"
           variant="solid"
+          border="1px solid silver"
           onClick={async () => {
             if (!imageUrl || imageUrl.includes("placeholder.com")) {
               await deletePost({

@@ -13,6 +13,7 @@ import {
   ModalBody,
   useDisclosure,
   ModalCloseButton,
+  Badge,
 } from "@chakra-ui/react";
 import { EditDeletePostButtons } from "../../components/EditDeletePostButtons";
 import { withApollo2 } from "../../utils/withApollo";
@@ -63,6 +64,9 @@ export const Post = ({}) => {
             </Flex>
           </Flex>
         </Box>
+        <Text mt={4}>
+          by: <Badge colorScheme="green">{data.post.author.username}</Badge>
+        </Text>
         <Flex p={5}>
           <EditDeletePostButtons
             id={data.post.id}
@@ -71,6 +75,15 @@ export const Post = ({}) => {
           />
         </Flex>
       </Container>
+      {data.post.text ? (
+        <Text mb={4} pl={4} fontWeight="bold">
+          Description:
+        </Text>
+      ) : (
+        <Text mb={4} pl={4} fontWeight="bold">
+          No description
+        </Text>
+      )}
       {data.post.text && (
         <Container
           mb={4}
@@ -81,7 +94,9 @@ export const Post = ({}) => {
           borderColor="gray.200"
           borderRadius="lg"
         >
-          <Box>{data?.post?.text}</Box>
+          <Box pb={2} pt={2}>
+            {data?.post?.text}
+          </Box>
         </Container>
       )}
 
