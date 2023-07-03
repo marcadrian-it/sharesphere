@@ -62,7 +62,7 @@ export const Post = ({}) => {
             <UpvoteSection
               post={{ ...data.post, textSnippet: data.post.text }}
             />
-            <Flex alignItems="center" mb={4}>
+            <Flex alignItems="center" mb={4} justifyContent={"center"}>
               <Img src={data?.post?.imageUrl} onClick={onOpen} />
             </Flex>
           </Flex>
