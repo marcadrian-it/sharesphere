@@ -20,6 +20,7 @@ import {
 import { UpvoteSection } from "../components/UpvoteSection";
 
 import NextLink from "next/link";
+import { timeDifference } from "../utils/timeUtil";
 
 const Index = () => {
   const { data, error, loading, fetchMore, variables } = usePostsQuery({
@@ -62,6 +63,9 @@ const Index = () => {
                 >
                   <UpvoteSection post={p} />
                   <Box flex={1}>
+                    <Text color={"grey"} fontSize={12}>
+                      Posted: {timeDifference(new Date(parseInt(p.createdAt)))}
+                    </Text>
                     <Link as={NextLink} href={`/post/${p.id}`}>
                       <Heading fontSize="xl">{p.title}</Heading>
 

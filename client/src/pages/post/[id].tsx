@@ -15,6 +15,7 @@ import {
   ModalCloseButton,
   Badge,
 } from "@chakra-ui/react";
+import { timeDifference } from "../../utils/timeUtil";
 import { EditDeletePostButtons } from "../../components/EditDeletePostButtons";
 import { withApollo2 } from "../../utils/withApollo";
 import { UpvoteSection } from "../../components/UpvoteSection";
@@ -33,9 +34,11 @@ export const Post = ({}) => {
   if (!data?.post) {
     return <Layout>Could not find post</Layout>;
   }
-
   return (
     <Layout>
+      <Text pl={4} color={"grey"} fontSize={12}>
+        Posted: {timeDifference(new Date(parseInt(data.post.createdAt)))}
+      </Text>
       <Text
         mb={4}
         pl={4}
