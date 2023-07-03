@@ -100,6 +100,7 @@ const Index = () => {
       {data && data.posts.hasMore ? (
         <Flex align="center" mt={6} mb={8}>
           <Button
+            border="1px solid silver"
             onClick={() => {
               fetchMore({
                 variables: {
