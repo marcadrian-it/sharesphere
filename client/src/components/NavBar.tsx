@@ -163,7 +163,11 @@ const DesktopNav = ({ data }: DesktopNavProps) => {
             _hover={{ textDecoration: "none", color: "gray.800" }}
           >
             <Flex flexDirection="row" align="center">
-              {data?.me && <Button>{navItem.label}</Button>}
+              {data?.me && (
+                <Button border="1px solid silver" colorScheme="gray">
+                  {navItem.label}
+                </Button>
+              )}
             </Flex>
           </Link>
         </Box>

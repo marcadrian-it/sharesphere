@@ -102,7 +102,7 @@ const CreatePost: React.FC<{}> = ({}) => {
                     width={500}
                     textarea
                     name="text"
-                    placeholder="text..."
+                    placeholder="description"
                     label="Body"
                   />
                 </Box>

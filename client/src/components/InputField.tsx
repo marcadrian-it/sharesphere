@@ -12,11 +12,14 @@ type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
   name: string;
   label?: string;
   textarea?: boolean;
+  resize?: "none";
+  maxWidth?: "100%";
 };
 
 export const InputField: React.FC<InputFieldProps> = ({
   label,
   textarea,
+  maxWidth,
   size: _,
   ...props
 }) => {
@@ -33,7 +36,8 @@ export const InputField: React.FC<InputFieldProps> = ({
         {...field}
         {...props}
         id={field.name}
-        maxWidth={{ base: "300", md: "500" }}
+        maxWidth={maxWidth || { base: "300", md: "600" }}
+        resize={props.resize}
       />
       {error ? <FormErrorMessage>{error}</FormErrorMessage> : null}
     </FormControl>

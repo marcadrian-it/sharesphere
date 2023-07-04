@@ -16,22 +16,34 @@ import {
   Badge,
   Center,
   Button,
+  Spinner,
 } from "@chakra-ui/react";
 import { timeDifference } from "../../utils/timeUtil";
 import { EditDeletePostButtons } from "../../components/EditDeletePostButtons";
 import { withApollo2 } from "../../utils/withApollo";
 import { UpvoteSection } from "../../components/UpvoteSection";
-import { useCreateCommentMutation } from "../../generated/graphql";
+import { useCreateCommentMutation, useMeQuery } from "../../generated/graphql";
 import { InputField } from "../../components/InputField";
 import { Form, Formik } from "formik";
+import { isServer } from "../../utils/isServer";
 
 export const Post = ({}) => {
   const [createComment] = useCreateCommentMutation();
   const { data, error, loading } = useGetPostFromUrl();
+  const { data: user } = useMeQuery({
+    skip: isServer(),
+  });
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   if (loading) {
-    return <Layout>Loading...</Layout>;
+    return (
+      <Layout>
+        <Flex flexDirection="column">
+          Loading
+          <Spinner />
+        </Flex>
+      </Layout>
+    );
   }
   if (error) {
     return <Layout>{error.message}</Layout>;
@@ -61,7 +73,7 @@ export const Post = ({}) => {
         border="1px solid"
         bg={"#ffff"}
         borderColor="gray.200"
-        borderRadius="lg"
+        rounded="lg"
       >
         <Box>
           <Flex alignItems="center" justifyContent="space-between">
@@ -107,66 +119,72 @@ export const Post = ({}) => {
           maxW="container.md"
           border="1px solid"
           borderColor="gray.200"
-          borderRadius="lg"
+          rounded="lg"
         >
           <Box pb={2} pt={2}>
             {data?.post?.text}
           </Box>
         </Container>
       )}
-      <Container mb={4} mt={4}>
-        <Formik
-          initialValues={{ text: "", postId: data.post.id }}
-          onSubmit={async (values, { resetForm }) => {
-            try {
-              await createComment({
-                variables: { postId: values.postId, text: values.text },
-                update: (cache) => {
-                  cache.evict({ fieldName: "post" });
-                },
-              });
-              // Handle success
-              resetForm(); // Reset the form fields
-              // Perform any additional actions after creating the comment
-            } catch (error) {
-              // Handle error
-              console.log(error);
-            }
-          }}
-        >
-          {({ isSubmitting }) => (
-            <Form>
-              <Box mt={4} bg="white" height={300} width={500}>
-                <InputField
-                  textarea
-                  height={300}
-                  width={500}
-                  name="text"
-                  placeholder="Enter your comment..."
-                />
-              </Box>
-              <Button
-                mt={4}
-                type="submit"
-                isLoading={isSubmitting}
-                colorScheme="teal"
-              >
-                Add Comment
-              </Button>
-            </Form>
-          )}
-        </Formik>
-      </Container>
-      <Flex flexDirection="column" gap={2} mb={8}>
-        {data.post.comments && data.post.comments.length > 0 ? (
-          <Box pl={4} fontWeight="bold">
-            Comments:
+      {user?.me ? (
+        <Flex ml={0} mb={4} pl={4} pr={4} width="100%" justifyContent="start">
+          <Box width="100%">
+            <Formik
+              initialValues={{ text: "", postId: data.post.id }}
+              onSubmit={async (values, { resetForm }) => {
+                try {
+                  await createComment({
+                    variables: { postId: values.postId, text: values.text },
+                    update: (cache) => {
+                      cache.evict({ fieldName: "post" });
+                    },
+                  });
+                  // Handle success
+                  resetForm(); // Reset the form fields
+                  // Perform any additional actions after creating the comment
+                } catch (error) {
+                  // Handle error
+                  console.log(error);
+                }
+              }}
+            >
+              {({ isSubmitting }) => (
+                <Form>
+                  <Box mt={4} bg="white" height={138} width="100%" rounded="lg">
+                    <InputField
+                      resize="none"
+                      textarea
+                      height={140}
+                      width="100%"
+                      maxWidth="100%"
+                      name="text"
+                      placeholder="Enter your comment"
+                    />
+                  </Box>
+                  <Button
+                    mt={4}
+                    type="submit"
+                    isLoading={isSubmitting}
+                    colorScheme="gray"
+                    border="1px solid silver"
+                  >
+                    Add Comment
+                  </Button>
+                </Form>
+              )}
+            </Formik>
           </Box>
+        </Flex>
+      ) : null}
+
+      <Flex flexDirection="column" gap={2} mb={8} ml={4} mr={4}>
+        {data.post.comments && data.post.comments.length > 0 ? (
+          <Box fontWeight="bold">Comments:</Box>
         ) : (
           <Box fontWeight="bold">No comments</Box>
         )}
         {data.post.comments && data.post.comments.length > 0
-          ? data.post.comments.map(({ id, text }) => (
+          ? data.post.comments.map(({ id, text, author, createdAt }) => (
               <Container
                 key={id}
                 p={5}
@@ -178,8 +196,14 @@ export const Post = ({}) => {
                 borderColor="gray.200"
                 borderRadius="lg"
               >
-                <Flex alignItems="center">
-                  <Text ml={4} color={"grey"} fontSize={12}>
+                <Flex flexDirection="column">
+                  <Text color={"grey"} fontSize={11}>
+                    Posted: {timeDifference(new Date(parseInt(createdAt)))}
+                  </Text>
+                  <Text fontSize={14} fontWeight="bold">
+                    {author.username}
+                  </Text>
+                  <Text ml={4} color={"black"} fontSize={14}>
                     {text}
                   </Text>
                 </Flex>
@@ -190,7 +214,7 @@ export const Post = ({}) => {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent maxW={{ base: "md", md: "3xl" }}>
-          <ModalCloseButton />
+          <ModalCloseButton color="grey" />
           <ModalBody justifyContent="center">
             <Center>
               <Img src={data?.post?.imageUrl} />

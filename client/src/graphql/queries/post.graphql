@@ -15,7 +15,10 @@ query Post($id: Int!) {
       updatedAt
       points
       voteStatus
-      authorId
+      author {
+        id
+        username
+      }
     }
     author {
       id
