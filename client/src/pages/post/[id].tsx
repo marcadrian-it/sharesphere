@@ -22,7 +22,11 @@ import { timeDifference } from "../../utils/timeUtil";
 import { EditDeletePostButtons } from "../../components/EditDeletePostButtons";
 import { withApollo2 } from "../../utils/withApollo";
 import { UpvoteSection } from "../../components/UpvoteSection";
-import { MeDocument, useCreateCommentMutation } from "../../generated/graphql";
+import {
+  MeDocument,
+  MeQuery,
+  useCreateCommentMutation,
+} from "../../generated/graphql";
 import { InputField } from "../../components/InputField";
 import { Form, Formik } from "formik";
 import { CommentUpvoteSection } from "../../components/CommentUpvoteSection";
@@ -32,9 +36,9 @@ export const Post = ({}) => {
   const [createComment] = useCreateCommentMutation();
   const { data, error, loading } = useGetPostFromUrl();
   const client = useApolloClient();
-  const user = client.readQuery({
+  const user = client.readQuery<MeQuery>({
     query: MeDocument,
-  })?.user;
+  })?.me;
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   if (loading) {
@@ -122,7 +126,7 @@ export const Post = ({}) => {
           </Box>
         </Container>
       )}
-      {user?.me ? (
+      {user ? (
         <Flex ml={0} mb={4} pl={4} pr={4} width="100%" justifyContent="start">
           <Box width="100%">
             <Formik
