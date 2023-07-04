@@ -1,5 +1,5 @@
 import React from "react";
-import { MeDocument, usePostsQuery } from "../generated/graphql";
+import { MeDocument, MeQuery, usePostsQuery } from "../generated/graphql";
 import { EditDeletePostButtons } from "../components/EditDeletePostButtons";
 import { Layout } from "../components/Layout";
 import { withApollo2 } from "../utils/withApollo";
@@ -26,12 +26,12 @@ import { useApolloClient } from "@apollo/client";
 
 const Index = () => {
   const client = useApolloClient();
-  const user = client.readQuery({
+  const user = client.readQuery<MeQuery>({
     query: MeDocument,
-  })?.user;
+  })?.me;
   const { data, error, loading, fetchMore, variables } = usePostsQuery({
     variables: {
-      limit: 15,
+      limit: 10,
       cursor: null,
     },
     notifyOnNetworkStatusChange: true,
