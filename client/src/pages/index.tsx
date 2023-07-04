@@ -16,6 +16,7 @@ import {
   Text,
   ScaleFade,
   Badge,
+  Spinner,
 } from "@chakra-ui/react";
 import { UpvoteSection } from "../components/UpvoteSection";
 
@@ -43,7 +44,10 @@ const Index = () => {
   return (
     <Layout>
       {!data && loading ? (
-        <Box>loading...</Box>
+        <Flex flexDirection="column">
+          Loading
+          <Spinner />
+        </Flex>
       ) : (
         <Stack spacing={8} mb={4} p={4}>
           {data!.posts.posts.map((p) =>

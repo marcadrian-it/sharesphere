@@ -16,7 +16,8 @@ import { MyContext } from "../types";
 import { isAuth } from "../middleware/isAuth";
 import { MyPostgresDataSource } from "../data-source";
 import { Int } from "type-graphql";
-import { Upvote } from "../entities/Upvote";
+import { PostUpvote } from "../entities/PostUpvote";
+import { Comment } from "../entities/Comment";
 import { User } from "../entities/User";
 import cloudinary from "cloudinary";
 
@@ -56,16 +57,22 @@ export class PostResolver {
     return userLoader.load(post.authorId);
   }
 
+  @FieldResolver(() => [Comment], { nullable: true })
+  async comments(@Root() post: Post, @Ctx() { commentLoader }: MyContext) {
+    const comments = await commentLoader.load(post.id);
+    return comments || [];
+  }
+
   @FieldResolver(() => Int, { nullable: true })
   async voteStatus(
     @Root() post: Post,
-    @Ctx() { upvoteLoader, req }: MyContext
+    @Ctx() { postUpvoteLoader, req }: MyContext
   ) {
     if (!req.session.userId) {
       return null;
     }
 
-    const upvote = await upvoteLoader.load({
+    const upvote = await postUpvoteLoader.load({
       postId: post.id,
       userId: req.session.userId,
     });
@@ -83,7 +90,7 @@ export class PostResolver {
     const realValue = value === 1 ? 1 : value === -1 ? -1 : 0;
     const { userId } = req.session;
 
-    const upvote = await Upvote.findOne({
+    const upvote = await PostUpvote.findOne({
       where: { postId, userId },
     });
 
@@ -94,7 +101,7 @@ export class PostResolver {
         if (realValue === 0) {
           await tm.query(
             `
-            delete from upvote
+            delete from post_upvote
             where "postId" = $1 and "userId" = $2
             `,
             [postId, userId]
@@ -102,7 +109,7 @@ export class PostResolver {
         } else {
           await tm.query(
             `
-            update upvote
+            update post_upvote
             set value = $1
             where "postId" = $2 and "userId" = $3
             `,
@@ -123,7 +130,7 @@ export class PostResolver {
       await MyPostgresDataSource.transaction(async (tm) => {
         await tm.query(
           `
-          insert into upvote ("userId", "postId", value)
+          insert into post_upvote ("userId", "postId", value)
           values ($1, $2, $3);
           `,
           [userId, postId, realValue]
@@ -175,7 +182,7 @@ export class PostResolver {
 
   @Query(() => Post, { nullable: true })
   post(@Arg("id", () => Int) id: number): Promise<Post | null> {
-    return Post.findOne({ where: { id }, relations: ["author"] });
+    return Post.findOne({ where: { id }, relations: ["author", "comments"] });
   }
 
   @Mutation(() => Post)

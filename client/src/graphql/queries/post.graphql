@@ -8,6 +8,9 @@ query Post($id: Int!) {
     text
     imageUrl
     voteStatus
+    comments {
+      ...CommentSnippet
+    }
     author {
       id
       username

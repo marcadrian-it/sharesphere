@@ -1,17 +1,34 @@
 import DataLoader from "dataloader";
-import { Upvote } from "../entities/Upvote";
+import { PostUpvote } from "../entities/PostUpvote";
+import { CommentUpvote } from "../entities/CommentUpvote";
 
-export const createUpvoteLoader = () =>
-  new DataLoader<{ postId: number; userId: number }, Upvote | null>(
+export const createPostUpvoteLoader = () =>
+  new DataLoader<{ postId: number; userId: number }, PostUpvote | null>(
     async (keys) => {
-      const upvotes = await Upvote.findBy(keys as any);
-      const upvoteIdsToUpvote: Record<string, Upvote> = {};
-      upvotes.forEach((upvote) => {
-        upvoteIdsToUpvote[`${upvote.userId}|${upvote.postId}`] = upvote;
+      const postUpvotes = await PostUpvote.findBy(keys as any);
+      const postUpvoteIdsToUpvote: Record<string, PostUpvote> = {};
+      postUpvotes.forEach((upvote) => {
+        postUpvoteIdsToUpvote[`${upvote.userId}|${upvote.postId}`] = upvote;
       });
 
       return keys.map(
-        (key) => upvoteIdsToUpvote[`${key.userId}|${key.postId}`]
+        (key) => postUpvoteIdsToUpvote[`${key.userId}|${key.postId}`]
+      );
+    }
+  );
+
+export const createCommentUpvoteLoader = () =>
+  new DataLoader<{ commentId: number; userId: number }, CommentUpvote | null>(
+    async (keys) => {
+      const commentUpvotes = await CommentUpvote.findBy(keys as any);
+      const commentUpvoteIdsToUpvote: Record<string, CommentUpvote> = {};
+      commentUpvotes.forEach((upvote) => {
+        commentUpvoteIdsToUpvote[`${upvote.userId}|${upvote.commentId}`] =
+          upvote;
+      });
+
+      return keys.map(
+        (key) => commentUpvoteIdsToUpvote[`${key.userId}|${key.commentId}`]
       );
     }
   );

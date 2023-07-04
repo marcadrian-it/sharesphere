@@ -54,6 +54,7 @@ const Login: React.FC<{}> = ({}) => {
                 name="usernameOrEmail"
                 placeholder="username or email"
                 label="Username or Email"
+                autoComplete="username"
               />
               <Box mt={4}>
                 <InputField
@@ -61,6 +62,7 @@ const Login: React.FC<{}> = ({}) => {
                   placeholder="password"
                   label="Password"
                   type="password"
+                  autoComplete="current-password"
                 />
               </Box>
               <Flex direction={"column"} mt={2}>
