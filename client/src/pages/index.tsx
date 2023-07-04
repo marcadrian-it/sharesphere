@@ -1,5 +1,5 @@
 import React from "react";
-import { usePostsQuery } from "../generated/graphql";
+import { MeDocument, usePostsQuery } from "../generated/graphql";
 import { EditDeletePostButtons } from "../components/EditDeletePostButtons";
 import { Layout } from "../components/Layout";
 import { withApollo2 } from "../utils/withApollo";
@@ -22,8 +22,13 @@ import { UpvoteSection } from "../components/UpvoteSection";
 
 import NextLink from "next/link";
 import { timeDifference } from "../utils/timeUtil";
+import { useApolloClient } from "@apollo/client";
 
 const Index = () => {
+  const client = useApolloClient();
+  const user = client.readQuery({
+    query: MeDocument,
+  })?.user;
   const { data, error, loading, fetchMore, variables } = usePostsQuery({
     variables: {
       limit: 15,
@@ -65,7 +70,7 @@ const Index = () => {
                   borderWidth="1px"
                   bg={"#ffff"}
                 >
-                  <UpvoteSection post={p} />
+                  <UpvoteSection post={p} user={user} />
                   <Box flex={1}>
                     <Text color={"grey"} fontSize={12}>
                       Posted: {timeDifference(new Date(parseInt(p.createdAt)))}

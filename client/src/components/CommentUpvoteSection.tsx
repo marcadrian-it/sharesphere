@@ -8,9 +8,11 @@ import {
 } from "../generated/graphql";
 import { ApolloCache } from "@apollo/client";
 import gql from "graphql-tag";
+import { useRouter } from "next/router";
 
 interface CommentUpvoteSectionProps {
   comment: CommentSnippetFragment;
+  user: any;
 }
 
 const updateAfterVote = (
@@ -55,16 +57,22 @@ const updateAfterVote = (
 
 export const CommentUpvoteSection: React.FC<CommentUpvoteSectionProps> = ({
   comment: comment,
+  user,
 }) => {
   const [loadingState, setLoadingState] = useState<
     "upvote-loading" | "downvote-loading" | "not-loading"
   >("not-loading");
   const [vote] = useVoteCommentMutation();
+  const router = useRouter();
 
   return (
     <Flex direction="column" justifyContent="center" alignItems="center" mr={5}>
       <IconButton
         onClick={async () => {
+          if (!user) {
+            router.push("/login");
+            return;
+          }
           if (comment.voteStatus === 1) {
             await vote({
               variables: {
@@ -96,6 +104,10 @@ export const CommentUpvoteSection: React.FC<CommentUpvoteSectionProps> = ({
       {comment.points}
       <IconButton
         onClick={async () => {
+          if (!user) {
+            router.push("/login");
+            return;
+          }
           if (comment.voteStatus === -1) {
             await vote({
               variables: {
