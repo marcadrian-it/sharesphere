@@ -56,7 +56,10 @@ const EditPost = ({}) => {
               if (file) {
                 const formData = new FormData();
                 formData.append("file", file);
-                formData.append("upload_preset", "cjbazo7v");
+                formData.append(
+                  "upload_preset",
+                  process.env.UPLOAD_PRESET ?? "cjbazo7v"
+                );
                 const response = await fetch(
                   `https://api.cloudinary.com/v1_1/dmzmqvehw/image/upload`,
                   {
@@ -73,7 +76,10 @@ const EditPost = ({}) => {
                   // If the user has provided a valid imageUrl, upload it to Cloudinary
                   const formData = new FormData();
                   formData.append("file", imageUrl);
-                  formData.append("upload_preset", "cjbazo7v");
+                  formData.append(
+                    "upload_preset",
+                    process.env.UPLOAD_PRESET ?? "cjbazo7v"
+                  );
                   const response = await fetch(
                     `https://api.cloudinary.com/v1_1/dmzmqvehw/image/upload`,
                     {
