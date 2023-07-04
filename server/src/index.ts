@@ -13,7 +13,8 @@ import { UserResolver } from "./resolvers/user";
 import cors from "cors";
 import { json } from "body-parser";
 import { createUserLoader } from "./utils/createUserLoader";
-import { createUpvoteLoader } from "./utils/createUpvoteLoader";
+import { createPostUpvoteLoader } from "./utils/createUpvoteLoader";
+import { createCommentUpvoteLoader } from "./utils/createUpvoteLoader";
 
 import session from "express-session";
 import RedisStore from "connect-redis";
@@ -80,7 +81,8 @@ const main = async () => {
         res,
         redis,
         userLoader: createUserLoader(),
-        upvoteLoader: createUpvoteLoader(),
+        postUpvoteLoader: createPostUpvoteLoader(),
+        commentUpvoteLoader: createCommentUpvoteLoader(),
         commentLoader: createCommentLoader(),
       }),
     })

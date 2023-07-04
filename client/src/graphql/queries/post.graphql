@@ -9,16 +9,7 @@ query Post($id: Int!) {
     imageUrl
     voteStatus
     comments {
-      id
-      text
-      createdAt
-      updatedAt
-      points
-      voteStatus
-      author {
-        id
-        username
-      }
+      ...CommentSnippet
     }
     author {
       id

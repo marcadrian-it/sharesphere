@@ -9,8 +9,9 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { Post } from "./Post";
-import { Upvote } from "./Upvote";
 import { Comment } from "./Comment";
+import { CommentUpvote } from "./CommentUpvote";
+import { PostUpvote } from "./PostUpvote";
 
 @ObjectType()
 @Entity()
@@ -33,8 +34,11 @@ export class User extends BaseEntity {
   @OneToMany(() => Post, (post) => post.author)
   posts: Post[];
 
-  @OneToMany(() => Upvote, (upvote) => upvote.user)
-  upvotes: Upvote[];
+  @OneToMany(() => CommentUpvote, (commentupvote) => commentupvote.user)
+  commentupvotes: CommentUpvote[];
+
+  @OneToMany(() => PostUpvote, (postupvote) => postupvote.user)
+  postupvotes: PostUpvote[];
 
   @OneToMany(() => Comment, (comment) => comment.author)
   comments: Comment[];

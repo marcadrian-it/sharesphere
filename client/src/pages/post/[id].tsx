@@ -26,7 +26,7 @@ import { useCreateCommentMutation, useMeQuery } from "../../generated/graphql";
 import { InputField } from "../../components/InputField";
 import { Form, Formik } from "formik";
 import { isServer } from "../../utils/isServer";
-
+import { CommentUpvoteSection } from "../../components/CommentUpvoteSection";
 export const Post = ({}) => {
   const [createComment] = useCreateCommentMutation();
   const { data, error, loading } = useGetPostFromUrl();
@@ -57,14 +57,7 @@ export const Post = ({}) => {
       <Text pl={4} color={"grey"} fontSize={12}>
         Posted: {timeDifference(new Date(parseInt(data.post.createdAt)))}
       </Text>
-      <Text
-        mb={4}
-        pl={4}
-        fontSize="4xl"
-        fontWeight="bold"
-        letterSpacing="wide"
-        textTransform="uppercase"
-      >
+      <Text mb={4} pl={4} fontSize="4xl" fontWeight="bold" letterSpacing="wide">
         {data?.post?.title}
       </Text>
       <Container
@@ -184,9 +177,9 @@ export const Post = ({}) => {
           <Box fontWeight="bold">No comments</Box>
         )}
         {data.post.comments && data.post.comments.length > 0
-          ? data.post.comments.map(({ id, text, author, createdAt }) => (
+          ? data.post.comments.map((comment) => (
               <Container
-                key={id}
+                key={comment.id}
                 p={5}
                 shadow="md"
                 borderWidth="1px"
@@ -196,16 +189,22 @@ export const Post = ({}) => {
                 borderColor="gray.200"
                 borderRadius="lg"
               >
-                <Flex flexDirection="column">
-                  <Text color={"grey"} fontSize={11}>
-                    Posted: {timeDifference(new Date(parseInt(createdAt)))}
-                  </Text>
-                  <Text fontSize={14} fontWeight="bold">
-                    {author.username}
-                  </Text>
-                  <Text ml={4} color={"black"} fontSize={14}>
-                    {text}
-                  </Text>
+                <Flex>
+                  <Flex>
+                    <CommentUpvoteSection comment={{ ...comment }} />
+                  </Flex>
+                  <Flex flexDirection="column">
+                    <Text color={"grey"} fontSize={11}>
+                      Posted:{" "}
+                      {timeDifference(new Date(parseInt(comment.createdAt)))}
+                    </Text>
+                    <Text fontSize={14} fontWeight="bold">
+                      {comment.author.username}
+                    </Text>
+                    <Text ml={4} color={"black"} fontSize={14}>
+                      {comment.text}
+                    </Text>
+                  </Flex>
                 </Flex>
               </Container>
             ))

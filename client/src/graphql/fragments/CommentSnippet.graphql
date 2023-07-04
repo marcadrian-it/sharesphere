@@ -1,0 +1,12 @@
+fragment CommentSnippet on Comment {
+  id
+  text
+  createdAt
+  updatedAt
+  points
+  voteStatus
+  author {
+    id
+    username
+  }
+}

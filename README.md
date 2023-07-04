@@ -42,6 +42,9 @@ To visit the website, click on the logo.
 ## CDN
 - Cloudinary
 
+## Instructions
+Sync schema directly from dist folder
+Example: npx typeorm schema:sync -d ./dist/data-source.js
 
 ## Preview
 https://user-images.githubusercontent.com/22295674/236194071-5debc1b5-3b1a-45ed-854d-5587aa007778.mp4

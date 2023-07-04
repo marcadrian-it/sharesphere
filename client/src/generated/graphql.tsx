@@ -47,6 +47,7 @@ export type Mutation = {
   register: UserResponse;
   updatePost?: Maybe<Post>;
   vote: Scalars['Boolean'];
+  voteComment: Scalars['Boolean'];
 };
 
 
@@ -100,6 +101,12 @@ export type MutationUpdatePostArgs = {
 
 export type MutationVoteArgs = {
   postId: Scalars['Int'];
+  value: Scalars['Int'];
+};
+
+
+export type MutationVoteCommentArgs = {
+  commentId: Scalars['Int'];
   value: Scalars['Int'];
 };
 
@@ -169,6 +176,8 @@ export type UsernamePasswordInput = {
   password: Scalars['String'];
   username: Scalars['String'];
 };
+
+export type CommentSnippetFragment = { __typename?: 'Comment', id: number, text: string, createdAt: string, updatedAt: string, points: number, voteStatus?: number | null, author: { __typename?: 'User', id: number, username: string } };
 
 export type PostSnippetFragment = { __typename?: 'Post', id: number, title: string, textSnippet: string, imageUrl: string, voteStatus?: number | null, points: number, createdAt: string, updatedAt: string, author: { __typename?: 'User', id: number, username: string } };
 
@@ -255,6 +264,14 @@ export type VoteMutationVariables = Exact<{
 
 export type VoteMutation = { __typename?: 'Mutation', vote: boolean };
 
+export type VoteCommentMutationVariables = Exact<{
+  value: Scalars['Int'];
+  commentId: Scalars['Int'];
+}>;
+
+
+export type VoteCommentMutation = { __typename?: 'Mutation', voteComment: boolean };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -275,6 +292,20 @@ export type PostsQueryVariables = Exact<{
 
 export type PostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPosts', hasMore: boolean, posts: Array<{ __typename?: 'Post', id: number, title: string, textSnippet: string, imageUrl: string, voteStatus?: number | null, points: number, createdAt: string, updatedAt: string, author: { __typename?: 'User', id: number, username: string } }> } };
 
+export const CommentSnippetFragmentDoc = gql`
+    fragment CommentSnippet on Comment {
+  id
+  text
+  createdAt
+  updatedAt
+  points
+  voteStatus
+  author {
+    id
+    username
+  }
+}
+    `;
 export const PostSnippetFragmentDoc = gql`
     fragment PostSnippet on Post {
   id
@@ -666,6 +697,38 @@ export function useVoteMutation(baseOptions?: Apollo.MutationHookOptions<VoteMut
 export type VoteMutationHookResult = ReturnType<typeof useVoteMutation>;
 export type VoteMutationResult = Apollo.MutationResult<VoteMutation>;
 export type VoteMutationOptions = Apollo.BaseMutationOptions<VoteMutation, VoteMutationVariables>;
+export const VoteCommentDocument = gql`
+    mutation VoteComment($value: Int!, $commentId: Int!) {
+  voteComment(value: $value, commentId: $commentId)
+}
+    `;
+export type VoteCommentMutationFn = Apollo.MutationFunction<VoteCommentMutation, VoteCommentMutationVariables>;
+
+/**
+ * __useVoteCommentMutation__
+ *
+ * To run a mutation, you first call `useVoteCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useVoteCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [voteCommentMutation, { data, loading, error }] = useVoteCommentMutation({
+ *   variables: {
+ *      value: // value for 'value'
+ *      commentId: // value for 'commentId'
+ *   },
+ * });
+ */
+export function useVoteCommentMutation(baseOptions?: Apollo.MutationHookOptions<VoteCommentMutation, VoteCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<VoteCommentMutation, VoteCommentMutationVariables>(VoteCommentDocument, options);
+      }
+export type VoteCommentMutationHookResult = ReturnType<typeof useVoteCommentMutation>;
+export type VoteCommentMutationResult = Apollo.MutationResult<VoteCommentMutation>;
+export type VoteCommentMutationOptions = Apollo.BaseMutationOptions<VoteCommentMutation, VoteCommentMutationVariables>;
 export const MeDocument = gql`
     query Me {
   me {
@@ -712,16 +775,7 @@ export const PostDocument = gql`
     imageUrl
     voteStatus
     comments {
-      id
-      text
-      createdAt
-      updatedAt
-      points
-      voteStatus
-      author {
-        id
-        username
-      }
+      ...CommentSnippet
     }
     author {
       id
@@ -729,7 +783,7 @@ export const PostDocument = gql`
     }
   }
 }
-    `;
+    ${CommentSnippetFragmentDoc}`;
 
 /**
  * __usePostQuery__
