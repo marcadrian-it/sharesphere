@@ -7,7 +7,7 @@ export const MyPostgresDataSource = new DataSource({
   url: process.env.DATABASE_URL,
   port: 5432,
   logging: true,
-  synchronize: true, // turn back to false on PROD
+  synchronize: false, // turn back to false on PROD
   entities: ["dist/entities/*.js"],
   subscribers: [],
   migrations: ["dist/migrations/*.js"],

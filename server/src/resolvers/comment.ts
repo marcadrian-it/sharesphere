@@ -66,7 +66,7 @@ export class CommentResolver {
       where: { commentId, userId },
     });
 
-    // the user has voted on the post before
+    // the user has voted on the comment before
     // and they are changing their vote
     if (upvote && upvote.value !== realValue) {
       await MyPostgresDataSource.transaction(async (tm) => {

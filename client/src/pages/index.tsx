@@ -1,5 +1,5 @@
 import React from "react";
-import { MeDocument, MeQuery, usePostsQuery } from "../generated/graphql";
+import { useMeQuery, usePostsQuery } from "../generated/graphql";
 import { EditDeletePostButtons } from "../components/EditDeletePostButtons";
 import { Layout } from "../components/Layout";
 import { withApollo2 } from "../utils/withApollo";
@@ -22,13 +22,11 @@ import { UpvoteSection } from "../components/UpvoteSection";
 
 import NextLink from "next/link";
 import { timeDifference } from "../utils/timeUtil";
-import { useApolloClient } from "@apollo/client";
 
 const Index = () => {
-  const client = useApolloClient();
-  const user = client.readQuery<MeQuery>({
-    query: MeDocument,
-  })?.me;
+  const { data: user } = useMeQuery({
+    fetchPolicy: "cache-only",
+  });
   const { data, error, loading, fetchMore, variables } = usePostsQuery({
     variables: {
       limit: 10,
@@ -96,11 +94,13 @@ const Index = () => {
                         {p.textSnippet}
                       </Text>
                       <Box ml="auto">
-                        <EditDeletePostButtons
-                          id={p.id}
-                          authorId={p.author.id}
-                          imageUrl={p.imageUrl}
-                        />
+                        {p.author.id === user?.me?.id && (
+                          <EditDeletePostButtons
+                            authorId={p.author.id}
+                            id={p.id}
+                            imageUrl={p.imageUrl}
+                          />
+                        )}
                       </Box>
                     </Flex>
                   </Box>

@@ -6,19 +6,20 @@ import { useDeletePostMutation, useMeQuery } from "../generated/graphql";
 
 interface EditDeletePostButtonsProps {
   id: number;
-  authorId: number;
   imageUrl: string;
+  authorId: number;
 }
 
 export const EditDeletePostButtons: React.FC<EditDeletePostButtonsProps> = ({
   id,
-  authorId,
   imageUrl,
+  authorId,
 }) => {
-  const { data: meData } = useMeQuery();
+  const { data: user } = useMeQuery({
+    fetchPolicy: "cache-only",
+  });
   const [deletePost] = useDeletePostMutation();
-
-  if (meData?.me?.id !== authorId) {
+  if (user?.me?.id !== authorId) {
     return null;
   } else {
     return (

@@ -225,8 +225,7 @@ export class PostResolver {
     // Delete the previous Cloudinary image if there was one
     if (prevImagePublicId) {
       try {
-        const result = await cloudinary.v2.uploader.destroy(prevImagePublicId);
-        console.log(result);
+        await cloudinary.v2.uploader.destroy(prevImagePublicId);
       } catch (error) {
         console.error(error);
       }
@@ -245,8 +244,7 @@ export class PostResolver {
     // Delete the image using the provided image ID
     if (imageId) {
       try {
-        const result = await cloudinary.v2.uploader.destroy(imageId);
-        console.log(result);
+        await cloudinary.v2.uploader.destroy(imageId);
       } catch (error) {
         console.error(error);
       }
