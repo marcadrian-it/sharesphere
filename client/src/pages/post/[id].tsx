@@ -22,23 +22,17 @@ import { timeDifference } from "../../utils/timeUtil";
 import { EditDeletePostButtons } from "../../components/EditDeletePostButtons";
 import { withApollo2 } from "../../utils/withApollo";
 import { UpvoteSection } from "../../components/UpvoteSection";
-import {
-  MeDocument,
-  MeQuery,
-  useCreateCommentMutation,
-} from "../../generated/graphql";
+import { useCreateCommentMutation, useMeQuery } from "../../generated/graphql";
 import { InputField } from "../../components/InputField";
 import { Form, Formik } from "formik";
 import { CommentUpvoteSection } from "../../components/CommentUpvoteSection";
-import { useApolloClient } from "@apollo/client";
 
 export const Post = ({}) => {
   const [createComment] = useCreateCommentMutation();
   const { data, error, loading } = useGetPostFromUrl();
-  const client = useApolloClient();
-  const user = client.readQuery<MeQuery>({
-    query: MeDocument,
-  })?.me;
+  const { data: user } = useMeQuery({
+    fetchPolicy: "cache-only",
+  });
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   if (loading) {
