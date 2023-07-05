@@ -21,47 +21,46 @@ export const EditDeletePostButtons: React.FC<EditDeletePostButtonsProps> = ({
   const [deletePost] = useDeletePostMutation();
   if (user?.me?.id !== authorId) {
     return null;
-  } else {
-    return (
-      <Box>
-        <IconButton
-          as={NextLink}
-          href={`/post/edit/${id}`}
-          aria-label="edit post"
-          variant="solid"
-          border="1px solid silver"
-          onClick={() => {}}
-          icon={<EditIcon />}
-        />
-        <IconButton
-          ml={4}
-          aria-label="delete post"
-          variant="solid"
-          border="1px solid silver"
-          onClick={async () => {
-            if (!imageUrl || imageUrl.includes("placeholder.com")) {
+  }
+  return (
+    <Box>
+      <IconButton
+        as={NextLink}
+        href={`/post/edit/${id}`}
+        aria-label="edit post"
+        variant="solid"
+        border="1px solid silver"
+        onClick={() => {}}
+        icon={<EditIcon />}
+      />
+      <IconButton
+        ml={4}
+        aria-label="delete post"
+        variant="solid"
+        border="1px solid silver"
+        onClick={async () => {
+          if (!imageUrl || imageUrl.includes("placeholder.com")) {
+            await deletePost({
+              variables: { id, imageId: "" },
+              update: (cache) => {
+                cache.evict({ id: "Post:" + id });
+              },
+            });
+          } else {
+            const match = imageUrl.match(/\/([^/]+)\.[^/.]+$/);
+            if (match) {
+              const imageId = match[1];
               await deletePost({
-                variables: { id, imageId: "" },
+                variables: { id, imageId },
                 update: (cache) => {
                   cache.evict({ id: "Post:" + id });
                 },
               });
-            } else {
-              const match = imageUrl.match(/\/([^/]+)\.[^/.]+$/);
-              if (match) {
-                const imageId = match[1];
-                await deletePost({
-                  variables: { id, imageId },
-                  update: (cache) => {
-                    cache.evict({ id: "Post:" + id });
-                  },
-                });
-              }
             }
-          }}
-          icon={<DeleteIcon />}
-        />
-      </Box>
-    );
-  }
+          }
+        }}
+        icon={<DeleteIcon />}
+      />
+    </Box>
+  );
 };

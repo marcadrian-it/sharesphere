@@ -6,7 +6,7 @@ read VERSION
 echo "Deploying version $VERSION - are you sure? (y/n)"
 read CONFIRM
 
-if [ "$CONFIRM" == "y" ]; then
+if [ "$CONFIRM" = "y" ]; then
   echo "Deploying version $VERSION"
 
   # build

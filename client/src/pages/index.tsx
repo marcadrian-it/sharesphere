@@ -94,13 +94,11 @@ const Index = () => {
                         {p.textSnippet}
                       </Text>
                       <Box ml="auto">
-                        {p.author.id === user?.me?.id && (
-                          <EditDeletePostButtons
-                            authorId={p.author.id}
-                            id={p.id}
-                            imageUrl={p.imageUrl}
-                          />
-                        )}
+                        <EditDeletePostButtons
+                          authorId={p.author.id}
+                          id={p.id}
+                          imageUrl={p.imageUrl}
+                        />
                       </Box>
                     </Flex>
                   </Box>
