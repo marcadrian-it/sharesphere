@@ -116,6 +116,8 @@ export const NavBar = () => {
               <Box boxSize="24">
                 <Img
                   src="https://res.cloudinary.com/dmzmqvehw/image/upload/v1682981008/cover1_p49abt.png"
+                  width="100"
+                  height="100"
                   alt="logo"
                 />
               </Box>

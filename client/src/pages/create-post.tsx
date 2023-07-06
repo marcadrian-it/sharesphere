@@ -3,7 +3,7 @@ import { Form, Formik } from "formik";
 
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { InputField } from "../components/InputField";
+import InputField from "../components/InputField";
 import { InputFile } from "../components/InputFile";
 import { Layout } from "../components/Layout";
 import { useCreatePostMutation } from "../generated/graphql";

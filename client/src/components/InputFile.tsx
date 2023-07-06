@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { Box, Button } from "@chakra-ui/react";
-import { InputField } from "./InputField";
+import InputField from "./InputField";
 
 interface InputFileProps {
   onFileChange: (file: File | null) => void;

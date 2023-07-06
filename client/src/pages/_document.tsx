@@ -5,7 +5,10 @@ export default class Document extends NextDocument {
     return (
       <Html lang="en">
         <Head>
-          <title>Sharesphere</title>
+          <meta
+            name="description"
+            content="Sharesphere is a portal with the goal of aggregating content, where users can share and discover posts and photos"
+          />
         </Head>
         <body>
           {}

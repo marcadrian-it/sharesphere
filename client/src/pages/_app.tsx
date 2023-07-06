@@ -1,5 +1,5 @@
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
-
+import Head from "next/head";
 import { AppProps } from "next/app";
 
 const theme = extendTheme({
@@ -7,7 +7,6 @@ const theme = extendTheme({
     colors: {
       "chakra-body-bg": {
         _light: "#f3f2ef",
-        _dark: "purple.800",
       },
     },
   },
@@ -16,6 +15,9 @@ const theme = extendTheme({
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider theme={theme} cssVarsRoot=":root">
+      <Head>
+        <title>Sharesphere</title>
+      </Head>
       <Component {...pageProps} />
     </ChakraProvider>
   );

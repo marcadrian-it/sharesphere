@@ -3,6 +3,7 @@ import { useMeQuery, usePostsQuery } from "../generated/graphql";
 import { EditDeletePostButtons } from "../components/EditDeletePostButtons";
 import { Layout } from "../components/Layout";
 import { withApollo2 } from "../utils/withApollo";
+import Image from "next/image";
 
 import {
   Box,
@@ -10,7 +11,6 @@ import {
   Center,
   Flex,
   Heading,
-  Img,
   Link,
   Stack,
   Text,
@@ -74,19 +74,21 @@ const Index = () => {
                       Posted: {timeDifference(new Date(parseInt(p.createdAt)))}
                     </Text>
                     <Link as={NextLink} href={`/post/${p.id}`}>
-                      <Heading fontSize="xl">{p.title}</Heading>
-
+                      <Heading mb={2} fontSize="xl">
+                        {p.title}
+                      </Heading>
                       <Center>
-                        <Img
+                        <Image
                           src={p.imageUrl}
-                          maxH="600"
-                          objectFit="cover"
-                          mt={4}
                           alt={p.title}
-                        ></Img>
+                          width={550}
+                          height={550}
+                          unoptimized={true}
+                          style={{ objectFit: "cover" }}
+                          sizes="(max-width: 600px) 300px, (min-width: 601px) 550px"
+                        />
                       </Center>
                     </Link>
-
                     <Text mt={4}>
                       by: <Badge colorScheme="green">{p.author.username}</Badge>
                     </Text>

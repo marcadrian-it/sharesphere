@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, Box, Flex } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 
-import { InputField } from "../../../components/InputField";
+import InputField from "../../../components/InputField";
 import { Layout } from "../../../components/Layout";
 import { usePostQuery } from "../../../generated/graphql";
 import { useUpdatePostMutation } from "../../../generated/graphql";
@@ -133,7 +133,7 @@ const EditPost = ({}) => {
                     width={500}
                     textarea
                     name="text"
-                    placeholder="text..."
+                    placeholder="text"
                     label="Body"
                   />
                 </Box>

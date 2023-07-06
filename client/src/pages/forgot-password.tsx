@@ -1,8 +1,16 @@
 import React from "react";
 import { Form, Formik } from "formik";
 import { Box, Button } from "@chakra-ui/react";
-import { Wrapper } from "../components/Wrapper";
-import { InputField } from "../components/InputField";
+import dynamic, { LoaderComponent } from "next/dynamic";
+import { WrapperProps } from "../components/Wrapper";
+import { InputFieldProps } from "../components/InputField";
+
+const DynamicWrapper = dynamic<WrapperProps>(
+  () => import("../components/Wrapper") as LoaderComponent<WrapperProps>
+);
+const DynamicInputField = dynamic<InputFieldProps>(
+  () => import("../components/InputField") as LoaderComponent<InputFieldProps>
+);
 import { useForgotPasswordMutation } from "../generated/graphql";
 import { useState } from "react";
 import { withApollo2 } from "../utils/withApollo";
@@ -11,7 +19,7 @@ const ForgotPassword: React.FC<{}> = ({}) => {
   const [complete, setComplete] = useState(false);
   const [forgotPassword] = useForgotPasswordMutation();
   return (
-    <Wrapper variant="small">
+    <DynamicWrapper variant="small">
       <Formik
         initialValues={{ email: "" }}
         onSubmit={async (values) => {
@@ -26,7 +34,7 @@ const ForgotPassword: React.FC<{}> = ({}) => {
             </Box>
           ) : (
             <Form>
-              <InputField
+              <DynamicInputField
                 name="email"
                 placeholder="email"
                 label="Email"
@@ -45,7 +53,7 @@ const ForgotPassword: React.FC<{}> = ({}) => {
           )
         }
       </Formik>
-    </Wrapper>
+    </DynamicWrapper>
   );
 };
 

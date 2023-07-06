@@ -3,7 +3,6 @@ import { useGetPostFromUrl } from "../../utils/useGetPostFromUrl";
 import { Layout } from "../../components/Layout";
 import {
   Box,
-  Img,
   Flex,
   Container,
   Text,
@@ -18,12 +17,13 @@ import {
   Button,
   Spinner,
 } from "@chakra-ui/react";
+import Image from "next/image";
 import { timeDifference } from "../../utils/timeUtil";
 import { EditDeletePostButtons } from "../../components/EditDeletePostButtons";
 import { withApollo2 } from "../../utils/withApollo";
 import { UpvoteSection } from "../../components/UpvoteSection";
 import { useCreateCommentMutation, useMeQuery } from "../../generated/graphql";
-import { InputField } from "../../components/InputField";
+import InputField from "../../components/InputField";
 import { Form, Formik } from "formik";
 import { CommentUpvoteSection } from "../../components/CommentUpvoteSection";
 
@@ -75,11 +75,11 @@ export const Post = ({}) => {
               user={user}
             />
             <Box flexGrow={1} mt={4}>
-              <Center>
-                <Img
+              <Center cursor="pointer">
+                <Image
                   src={data?.post?.imageUrl}
                   onClick={onOpen}
-                  cursor="pointer"
+                  unoptimized={true}
                   alt={data?.post?.title}
                 />
               </Center>
@@ -221,7 +221,11 @@ export const Post = ({}) => {
           <ModalCloseButton color="grey" />
           <ModalBody justifyContent="center">
             <Center>
-              <Img src={data?.post?.imageUrl} />
+              <Image
+                src={data?.post?.imageUrl}
+                alt={`${data?.post.title}-modal`}
+                unoptimized={true}
+              />
             </Center>
           </ModalBody>
         </ModalContent>

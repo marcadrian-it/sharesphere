@@ -4,8 +4,17 @@ import { Formik, Form } from "formik";
 import { Box, Button } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { toErrorMap } from "../../utils/toErrorMap";
-import { InputField } from "../../components/InputField";
-import { Wrapper } from "../../components/Wrapper";
+import dynamic, { LoaderComponent } from "next/dynamic";
+import { WrapperProps } from "../../components/Wrapper";
+import { InputFieldProps } from "../../components/InputField";
+
+const DynamicWrapper = dynamic<WrapperProps>(
+  () => import("../../components/Wrapper") as LoaderComponent<WrapperProps>
+);
+const DynamicInputField = dynamic<InputFieldProps>(
+  () =>
+    import("../../components/InputField") as LoaderComponent<InputFieldProps>
+);
 import {
   MeDocument,
   MeQuery,
@@ -21,7 +30,7 @@ const ChangePassword: NextPage<{ token: string }> = () => {
   const [ChangePassword] = useChangePasswordMutation();
   const [tokenError, setTokenError] = useState("");
   return (
-    <Wrapper variant="small">
+    <DynamicWrapper variant="small">
       <Formik
         initialValues={{ newPassword: "" }}
         onSubmit={async (values, { setErrors }) => {
@@ -58,7 +67,7 @@ const ChangePassword: NextPage<{ token: string }> = () => {
       >
         {({ isSubmitting }) => (
           <Form>
-            <InputField
+            <DynamicInputField
               name="newPassword"
               placeholder="new password"
               label="New Password"
@@ -84,7 +93,7 @@ const ChangePassword: NextPage<{ token: string }> = () => {
           </Form>
         )}
       </Formik>
-    </Wrapper>
+    </DynamicWrapper>
   );
 };
 

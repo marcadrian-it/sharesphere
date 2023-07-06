@@ -8,7 +8,7 @@ import {
 import { useField } from "formik";
 import React, { InputHTMLAttributes } from "react";
 
-type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
+export type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
   name: string;
   label?: string;
   textarea?: boolean;
@@ -16,7 +16,7 @@ type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
   maxWidth?: "100%";
 };
 
-export const InputField: React.FC<InputFieldProps> = ({
+const InputField: React.FC<InputFieldProps> = ({
   label,
   textarea,
   maxWidth,
@@ -43,3 +43,5 @@ export const InputField: React.FC<InputFieldProps> = ({
     </FormControl>
   );
 };
+
+export default InputField;
