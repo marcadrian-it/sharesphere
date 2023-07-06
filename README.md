@@ -45,7 +45,7 @@ To visit the website, click on the logo.
 - `npm run gen-env` - generates TypeScript types for environment variables based on the .env file.
 - `npm run build` - compiles the TypeScript code into JavaScript using the TypeScript compiler.
 - `npm run dev` - runs the compiled JavaScript code using nodemon.
-- `npm run start-dbs.sh` - runs the start-dbs.sh shell script.
+- `npm run start-dbs.sh` - runs the start-dbs.sh shell script to start Redis and PostgreSQL dbs.
 - Sync schema directly from dist folder.
 Example: `npx typeorm schema:sync -d ./dist/data-source.js`
 
