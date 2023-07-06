@@ -15,7 +15,7 @@ const theme = extendTheme({
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ChakraProvider theme={theme}>
+    <ChakraProvider theme={theme} cssVarsRoot=":root">
       <Component {...pageProps} />
     </ChakraProvider>
   );
