@@ -80,6 +80,7 @@ export const Post = ({}) => {
                   src={data?.post?.imageUrl}
                   onClick={onOpen}
                   cursor="pointer"
+                  alt={data?.post?.title}
                 />
               </Center>
             </Box>

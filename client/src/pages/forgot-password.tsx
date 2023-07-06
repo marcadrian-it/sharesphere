@@ -37,6 +37,7 @@ const ForgotPassword: React.FC<{}> = ({}) => {
                 type="submit"
                 colorScheme="teal"
                 isLoading={isSubmitting}
+                aria-label="Forgot Password"
               >
                 forgot password
               </Button>

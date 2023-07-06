@@ -82,6 +82,7 @@ const Index = () => {
                           maxH="600"
                           objectFit="cover"
                           mt={4}
+                          alt={p.title}
                         ></Img>
                       </Center>
                     </Link>
@@ -123,6 +124,7 @@ const Index = () => {
             }}
             isLoading={loading}
             m="auto"
+            aria-label="Load more posts"
           >
             load more
           </Button>

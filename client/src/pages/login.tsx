@@ -78,6 +78,7 @@ const Login: React.FC<{}> = ({}) => {
                 type="submit"
                 colorScheme="teal"
                 isLoading={isSubmitting}
+                aria-label="login"
               >
                 login
               </Button>

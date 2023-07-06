@@ -117,6 +117,7 @@ const CreatePost: React.FC<{}> = ({}) => {
                   type="submit"
                   isLoading={isSubmitting}
                   colorScheme="teal"
+                  aria-label="Create Post"
                 >
                   Create Post
                 </Button>

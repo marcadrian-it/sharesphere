@@ -75,6 +75,7 @@ const Register: React.FC<registerProps> = ({}) => {
                   type="submit"
                   colorScheme="teal"
                   isLoading={isSubmitting}
+                  aria-label="Register"
                 >
                   register
                 </Button>
