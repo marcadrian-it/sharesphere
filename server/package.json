@@ -33,7 +33,7 @@
     "argon2": "^0.30.3",
     "body-parser": "^1.20.2",
     "class-validator": "^0.14.0",
-    "cloudinary": "^1.36.4",
+    "cloudinary": "^1.37.3",
     "connect-redis": "^7.0.1",
     "cors": "^2.8.5",
     "dataloader": "^2.2.2",
