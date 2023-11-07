@@ -75,7 +75,7 @@ export const NavBar = () => {
         zIndex={1}
         position="sticky"
         top={0}
-        p={4}
+        p={3}
         borderBottom="1px solid silver"
         sx={{
           "::before": {
@@ -143,6 +143,22 @@ export const NavBar = () => {
       <Collapse in={isOpen} animateOpacity>
         <MobileNav data={data} />
       </Collapse>
+      <svg
+        className="diagonal"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 100 10"
+        preserveAspectRatio="none"
+        width="100%"
+        height="25"
+      >
+        <defs>
+          <linearGradient id="linear" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#c02d28"></stop>
+            <stop offset="100%" stop-color="#e66225"></stop>
+          </linearGradient>
+        </defs>
+        <polygon points="0,2 0,0 100,0 100,10" fill="url(#linear)"></polygon>
+      </svg>
     </Box>
   );
 };
