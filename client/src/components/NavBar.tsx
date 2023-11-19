@@ -153,8 +153,8 @@ export const NavBar = () => {
       >
         <defs>
           <linearGradient id="linear" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#c02d28"></stop>
-            <stop offset="100%" stop-color="#e66225"></stop>
+            <stop offset="0%" stopColor="#c02d28"></stop>
+            <stop offset="100%" stopColor="#e66225"></stop>
           </linearGradient>
         </defs>
         <polygon points="0,2 0,0 100,0 100,10" fill="url(#linear)"></polygon>
