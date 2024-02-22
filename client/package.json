@@ -21,7 +21,7 @@
     "@emotion/styled": "^11.9.0",
     "formik": "^2.2.9",
     "framer-motion": "10.12.4",
-    "graphql": "16.6",
+    "graphql": "16.8",
     "graphql-tag": "2.12.6",
     "next": "13.5",
     "next-apollo": "^5.0.8",
