@@ -29,9 +29,9 @@ const main = async () => {
 
   const app = express();
 
-  let redis = new Redis(process.env.REDIS_URL as string);
+  const redis = new Redis(process.env.REDIS_URL as string);
 
-  let redisStore = new RedisStore({
+  const redisStore = new RedisStore({
     client: redis,
     disableTouch: true,
   });
